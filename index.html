@@ -520,7 +520,6 @@ img,svg{display:block;max-width:100%}
   box-shadow:0 10px 28px -8px rgba(79,179,131,.55)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* CONFESSION */
 .app{position:relative;z-index:1;min-height:100dvh;
   display:grid;grid-template-columns:1fr;
   padding:max(var(--gutter),env(safe-area-inset-top))
@@ -653,7 +652,8 @@ img,svg{display:block;max-width:100%}
     background var(--dur-2) var(--ease)}
 .btn--no:hover{color:var(--c-fg);border-color:var(--c-rose-3);
   background:rgba(224,114,158,.05)}
-.btn--no.is-fleeing{position:fixed;z-index:70;box-shadow:0 8px 24px -8px rgba(0,0,0,.6)}
+.btn--no.is-fleeing{position:fixed;z-index:70;
+  box-shadow:0 8px 24px -8px rgba(0,0,0,.6)}
 .celebrate{text-align:center;padding:var(--s-5) var(--s-3)}
 .celebrate__mark{width:56px;height:56px;margin:0 auto var(--s-4);
   border-radius:50%;display:grid;place-items:center;
@@ -696,7 +696,6 @@ img,svg{display:block;max-width:100%}
 .share-now .msgr:hover{border-color:rgba(0,132,255,.5);color:#6bb8ff}
 .share-now .tt:hover{border-color:rgba(255,0,80,.5);color:#ff5c8a}
 
-/* power-off */
 .poweroff{position:fixed;inset:0;z-index:900;display:grid;
   place-items:center;padding:24px;background:#000;
   opacity:0;visibility:hidden;
@@ -886,7 +885,6 @@ img,svg{display:block;max-width:100%}
   <main class="home__body">
     <div class="container">
 
-      <!-- BUILDER -->
       <section class="section" id="build" style="padding-top:0">
         <div class="form-card">
           <div class="form-card__head">
@@ -1056,7 +1054,6 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- HOW -->
       <section class="section" id="how">
         <div class="section__head">
           <span class="section__eyebrow">how it works</span>
@@ -1094,7 +1091,6 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- FEATURES -->
       <section class="section">
         <div class="section__head">
           <span class="section__eyebrow">what's inside</span>
@@ -1116,15 +1112,15 @@ img,svg{display:block;max-width:100%}
             <div class="feature__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
             </div>
-            <h3>Music on yes</h3>
-            <p>A soft track starts only when she says yes. Silence until then.</p>
+            <h3>Music after yes</h3>
+            <p>A soft track starts the moment she says yes. Silence until then.</p>
           </div>
           <div class="feature">
             <div class="feature__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
             </div>
             <h3>The dramatic no</h3>
-            <p>Tapping no powers off the page — and the button keeps running until she says yes.</p>
+            <p>No powers off the page — and the song plays the moment the reveal appears. The button keeps running.</p>
           </div>
           <div class="feature">
             <div class="feature__icon" aria-hidden="true">
@@ -1150,7 +1146,6 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- SAMPLE -->
       <section class="section">
         <div class="section__head">
           <span class="section__eyebrow">what she sees</span>
@@ -1166,9 +1161,9 @@ img,svg{display:block;max-width:100%}
             <ul class="samples__list">
               <li>Personalized headline with her name</li>
               <li>Opening line you write in the builder</li>
-              <li>Music that plays when she says yes</li>
+              <li>Music that starts when she says yes</li>
               <li>Yes forwards her straight to your chat</li>
-              <li>No triggers a fake power-off, and the button keeps dodging</li>
+              <li>No triggers a fake power-off, then the song plays and the button keeps dodging</li>
               <li>Contact the owner chip on every screen</li>
             </ul>
           </div>
@@ -1186,7 +1181,6 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- FAQ -->
       <section class="section" id="faq">
         <div class="section__head">
           <span class="section__eyebrow">questions</span>
@@ -1220,9 +1214,9 @@ img,svg{display:block;max-width:100%}
           <details>
             <summary>When does the music play?</summary>
             <div class="faq__body">
-              Only if she taps yes. Nothing plays on page load, nothing plays if
-              she taps no — even after the shutdown, even after the reveal.
-              The song starts the moment she says yes.
+              If she taps yes, the song starts immediately. If she taps no, the
+              prank plays in silence, then the song starts the moment the
+              reveal card appears. Either way, she hears the song by the end.
             </div>
           </details>
           <details>
@@ -1230,9 +1224,9 @@ img,svg{display:block;max-width:100%}
             <div class="faq__body">
               The page plays a fake power-off sequence — a black screen, a
               slide-to-power-off slider, a low-battery frame, then a boot
-              animation. Then the reveal card appears, with a no button that
-              dodges forever. She can chase it as long as she wants. The only
-              way forward is yes.
+              animation. Then the reveal card appears, the song starts, and the
+              no button dodges forever. She can chase it as long as she wants.
+              The only way forward is yes.
             </div>
           </details>
           <details>
@@ -1264,7 +1258,6 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- FOOTER -->
       <footer class="site-foot">
         <div class="foot__grid">
           <div class="foot__brand">
@@ -1546,9 +1539,10 @@ img,svg{display:block;max-width:100%}
   const OWNER_MM = _mk1 + _mk2;
 
   /* ═══════════════════════════════════════════════════════════
-     YOUTUBE — silent until YES
+     YOUTUBE — silent until yes, or until the no-prank finishes
      ═══════════════════════════════════════════════════════════ */
   let yt = null, ytReady = false, ytRequested = false;
+  let pendingMusicStart = false;
   const YT_API_SRC = "https://www.youtube.com/iframe_api";
 
   function loadYouTubeAPI(cb){
@@ -1566,6 +1560,7 @@ img,svg{display:block;max-width:100%}
     }
   }
 
+  /* YES path — full unmuted playback on the tap gesture */
   function playMusicOnce(){
     if (ytRequested) return;
     ytRequested = true;
@@ -1590,6 +1585,51 @@ img,svg{display:block;max-width:100%}
         }
       });
     });
+  }
+
+  /* NO path — silently arm the player, then start on reveal */
+  function prepareMusicForLater(){
+    if (ytRequested) return;
+    ytRequested = true;
+    loadYouTubeAPI(() => {
+      yt = new YT.Player("yt-host", {
+        height:"1", width:"1", videoId: YT_VIDEO_ID,
+        playerVars:{
+          autoplay: 0, mute: 1, controls: 0, disablekb: 1,
+          modestbranding: 1, playsinline: 1, rel: 0,
+          loop: 1, playlist: YT_VIDEO_ID, origin: location.origin,
+          iv_load_policy: 3, fs: 0, cc_load_policy: 0
+        },
+        events:{
+          onReady(e){
+            ytReady = true;
+            /* silent activation tick — arms the player so unmute works later */
+            try {
+              e.target.mute();
+              e.target.playVideo();
+              setTimeout(() => {
+                try { e.target.pauseVideo(); e.target.seekTo(0); } catch(_){}
+              }, 120);
+            } catch(_){}
+            if (pendingMusicStart) startMusicNow();
+          }
+        }
+      });
+    });
+  }
+
+  function startMusicNow(){
+    if (!ytReady || !yt){
+      pendingMusicStart = true;
+      return;
+    }
+    pendingMusicStart = false;
+    try {
+      yt.seekTo(0);
+      yt.playVideo();
+      yt.unMute();
+      yt.setVolume(65);
+    } catch(_){}
   }
 
   /* ═══════════════════════════════════════════════════════════
@@ -2007,7 +2047,6 @@ img,svg{display:block;max-width:100%}
     if (fwdNote) fwdNote.style.display = "none";
   }
 
-  /* share-now buttons on celebrate screen — point at THIS page's URL */
   const pageUrl = location.href;
   const shareCFb = $("#share-c-fb");
   if (shareCFb){
@@ -2145,7 +2184,7 @@ img,svg{display:block;max-width:100%}
   }
   if (fwdBtn) fwdBtn.addEventListener("click", goToFB);
 
-  /* YES — audio starts here, and only here */
+  /* YES — audio starts here */
   function celebrate(){
     buzz([18, 40, 18, 40, 60]);
     playMusicOnce();
@@ -2156,7 +2195,7 @@ img,svg{display:block;max-width:100%}
   const y1 = $("#yes-1"); if (y1) y1.addEventListener("click", celebrate);
   const y2 = $("#yes-2"); if (y2) y2.addEventListener("click", celebrate);
 
-  /* NO — silent shutdown. No music ever. */
+  /* NO — silent prank, then music at reveal */
   let poweredOff = false;
   function runShutdown(){
     if (poweredOff) return;
@@ -2199,22 +2238,26 @@ img,svg{display:block;max-width:100%}
       po.classList.remove("on");
       poweredOff = false;
       show($("#s-reveal"));
+      startMusicNow();   /* music starts the instant the reveal appears */
     }, T.reveal);
   }
-  const n1 = $("#no-1"); if (n1) n1.addEventListener("click", runShutdown);
 
-  /* fleeing no — dodges FOREVER, never surrenders */
+  const n1 = $("#no-1");
+  if (n1) n1.addEventListener("click", () => {
+    prepareMusicForLater();   /* arm the player silently during the prank */
+    runShutdown();
+  });
+
+  /* fleeing no — dodges FOREVER */
   (function makeFlee(btn){
     if (!btn) return;
     let flees = 0;
     function dodge(){
       flees++;
-      // yes button grows a little each dodge, then caps
       const grow = Math.min(1 + flees * 0.04, 1.18);
       $$(".btn--yes").forEach(y => {
         y.style.transform = `scale(${grow})`;
       });
-      // reposition somewhere else on screen, always visible
       const pad = 16;
       const w = btn.offsetWidth, h = btn.offsetHeight;
       const maxX = Math.max(pad, window.innerWidth  - w - pad);
