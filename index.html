@@ -407,6 +407,8 @@ img,svg{display:block;max-width:100%}
   background:rgba(0,0,0,.42);
   box-shadow:0 0 0 3px rgba(224,114,158,.12);
 }
+.field input:disabled{opacity:.55;cursor:not-allowed}
+
 .messenger-field{position:relative}
 .messenger-field input{
   padding-right:44px;
@@ -429,6 +431,43 @@ img,svg{display:block;max-width:100%}
   width:15px;height:15px;fill:none;stroke:currentColor;
   stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
 }
+
+/* alias field */
+.alias-row{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:0;
+  align-items:stretch;
+}
+.alias-prefix{
+  display:inline-flex;align-items:center;
+  padding:0 14px;
+  background:rgba(0,0,0,.42);
+  border:1px solid var(--c-line-strong);
+  border-right:0;
+  border-radius:var(--r-md) 0 0 var(--r-md);
+  font-family:var(--font-mono);
+  font-size:.875rem;
+  font-weight:500;
+  color:var(--c-fg-soft);
+  white-space:nowrap;
+  user-select:none;
+}
+.alias-input{
+  border-radius:0 var(--r-md) var(--r-md) 0 !important;
+  font-family:var(--font-mono);
+  letter-spacing:.01em;
+}
+.alias-hint{
+  display:block;
+  margin-top:6px;
+  font-size:var(--t-xs);
+  color:var(--c-fg-dim);
+  line-height:1.4;
+  transition:color var(--dur-2) var(--ease);
+}
+.alias-hint.is-ok{color:var(--c-ok)}
+.alias-hint.is-bad{color:var(--c-warn)}
 
 .advanced{
   margin-top:var(--s-4);padding-top:var(--s-4);
@@ -500,6 +539,8 @@ img,svg{display:block;max-width:100%}
 .btn-primary:active{transform:translateY(1px)}
 .btn-primary:disabled{opacity:.6;cursor:wait}
 .btn-primary svg{width:15px;height:15px}
+.btn-primary.is-loading svg{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 .btn-ghost{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
@@ -533,6 +574,24 @@ img,svg{display:block;max-width:100%}
   color:var(--c-fg-soft);margin-bottom:10px;
 }
 .out__label svg{width:12px;height:12px;fill:currentColor;opacity:.7}
+.out__short-preview{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;
+  margin-bottom:10px;
+  background:rgba(224,114,158,.06);
+  border:1px solid rgba(224,114,158,.18);
+  border-radius:var(--r-md);
+  font-size:var(--t-sm);
+  color:var(--c-fg-mid);
+}
+.out__short-preview svg{
+  width:13px;height:13px;fill:currentColor;
+  color:var(--c-rose-2);flex:0 0 auto;
+}
+.out__short-preview strong{
+  color:var(--c-rose-1);font-weight:600;
+  font-family:var(--font-mono);font-size:.8125rem;
+}
 .out__link{
   display:block;width:100%;
   padding:16px 18px;
@@ -555,6 +614,11 @@ img,svg{display:block;max-width:100%}
   color:var(--c-fg-dim);
   font-weight:400;font-style:italic;
   font-family:var(--font-sans);
+}
+.out__link-url.is-cached::after{
+  content:" · cached";
+  font-size:.75rem;color:var(--c-fg-dim);
+  font-weight:400;font-style:italic;
 }
 .out__link-hint{
   display:block;margin-top:4px;
@@ -604,6 +668,10 @@ img,svg{display:block;max-width:100%}
   width:168px;height:168px;
   background:#fff;border-radius:var(--r-sm);
   padding:8px;display:block;
+  transition:opacity var(--dur-2) var(--ease);
+}
+.qr-block__img:not([src]){
+  opacity:0;
 }
 .qr-block__hint{font-size:var(--t-xs);color:var(--c-fg-soft);text-align:center}
 .out__actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -877,6 +945,13 @@ img,svg{display:block;max-width:100%}
   box-shadow:0 40px 100px -20px rgba(0,0,0,.9);
 }
 .modal__frame iframe{width:100%;height:100%;border:0;background:var(--c-bg-1)}
+.modal__loading{
+  position:absolute;inset:0;display:grid;place-items:center;
+  background:var(--c-bg-1);z-index:1;
+  color:var(--c-fg-dim);font-size:var(--t-sm);
+  transition:opacity var(--dur-2) var(--ease);
+}
+.modal__loading.hidden{display:none}
 .modal__close{
   position:absolute;top:12px;right:12px;z-index:2;
   width:34px;height:34px;border-radius:50%;
@@ -1434,7 +1509,7 @@ img,svg{display:block;max-width:100%}
   <main class="home__body">
     <div class="container">
 
-      <!-- builder -->
+      <!-- ═══ BUILDER ═══ -->
       <section class="section" id="build" style="padding-top:0">
         <div class="form-card">
           <div class="form-card__head">
@@ -1478,6 +1553,22 @@ img,svg{display:block;max-width:100%}
               <span class="hint">she'll be forwarded to chat with you on messenger</span>
             </div>
 
+            <div class="field">
+              <label for="b-alias">
+                custom short link
+                <span class="opt">optional</span>
+              </label>
+              <div class="alias-row">
+                <span class="alias-prefix">is.gd/</span>
+                <input id="b-alias" class="alias-input" type="text"
+                       maxlength="30" placeholder="Maria4Bcen"
+                       autocomplete="off" spellcheck="false">
+              </div>
+              <span class="alias-hint" id="alias-hint">
+                leave blank for a random link · letters, numbers, and dashes
+              </span>
+            </div>
+
             <details class="advanced">
               <summary>customize the message</summary>
               <div class="advanced__body">
@@ -1500,7 +1591,7 @@ img,svg{display:block;max-width:100%}
             </details>
 
             <button type="submit" class="btn-primary" id="build-btn">
-              build my link
+              <span class="btn-label">build my link</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                    aria-hidden="true">
@@ -1515,6 +1606,13 @@ img,svg{display:block;max-width:100%}
                 <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l2-2"/>
               </svg>
               your link
+            </div>
+
+            <div class="out__short-preview" id="short-preview" style="display:none">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.8c.9.2 1.9.4 2.9.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2z"/>
+              </svg>
+              sending as <strong id="short-preview-text">is.gd/…</strong>
             </div>
 
             <div class="out__link" id="out-link" role="button" tabindex="0">
@@ -1581,7 +1679,7 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- how it works -->
+      <!-- ═══ HOW IT WORKS ═══ -->
       <section class="section" id="how">
         <div class="section__head">
           <span class="section__eyebrow">how it works</span>
@@ -1604,8 +1702,8 @@ img,svg{display:block;max-width:100%}
             <div class="step__n">2</div>
             <div class="step__title">Get the link</div>
             <p class="step__body">
-              A short link, a QR code, and a share row. Copy it, scan it, or
-              share it straight into Messenger, Facebook, or TikTok.
+              A short link with a custom alias, a QR code, and a share row.
+              Copy it, scan it, or share it straight into Messenger.
             </p>
           </div>
           <div class="step">
@@ -1619,7 +1717,7 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- features -->
+      <!-- ═══ FEATURES ═══ -->
       <section class="section">
         <div class="section__head">
           <span class="section__eyebrow">what's inside</span>
@@ -1675,7 +1773,7 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- sample -->
+      <!-- ═══ SAMPLE ═══ -->
       <section class="section">
         <div class="section__head">
           <span class="section__eyebrow">what she sees</span>
@@ -1711,7 +1809,7 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- faq -->
+      <!-- ═══ FAQ ═══ -->
       <section class="section" id="faq">
         <div class="section__head">
           <span class="section__eyebrow">questions</span>
@@ -1729,9 +1827,9 @@ img,svg{display:block;max-width:100%}
             <summary>Is any of this stored anywhere?</summary>
             <div class="faq__body">
               No. Everything is client-side. The only third party in the chain
-              is the link shortener (is.gd, or TinyURL as a backup) which sees
-              the long link long enough to shorten it. Nothing about her, or
-              about you, is stored on any server.
+              is the link shortener (is.gd, TinyURL, or spoo.me) which sees the
+              long link long enough to shorten it. Nothing about her, or about
+              you, is stored on any server.
             </div>
           </details>
           <details>
@@ -1770,11 +1868,12 @@ img,svg{display:block;max-width:100%}
             </div>
           </details>
           <details>
-            <summary>Can I send the same link to more than one person?</summary>
+            <summary>Can I use a custom short link?</summary>
             <div class="faq__body">
-              The link carries the name you typed, so it's per-person. If you
-              want to send to several people, build a separate link for each
-              one in the builder.
+              Yes. Type an alias in the "custom short link" field and the
+              builder will try to reserve it on is.gd, then TinyURL, then
+              spoo.me. If it's taken, the builder falls back to a random link
+              and tells you.
             </div>
           </details>
           <details>
@@ -1789,7 +1888,7 @@ img,svg{display:block;max-width:100%}
         </div>
       </section>
 
-      <!-- footer -->
+      <!-- ═══ FOOTER ═══ -->
       <footer class="site-foot">
         <div class="foot__grid">
           <div class="foot__brand">
@@ -1999,6 +2098,7 @@ img,svg{display:block;max-width:100%}
 
 <div class="modal" id="preview-modal" role="dialog" aria-modal="true" aria-label="preview">
   <div class="modal__frame">
+    <div class="modal__loading" id="preview-loading">loading preview…</div>
     <button class="modal__close" id="preview-close" aria-label="close preview">
       <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
@@ -2012,6 +2112,9 @@ img,svg{display:block;max-width:100%}
 (() => {
   "use strict";
 
+  /* ═══════════════════════════════════════════════════════════
+     SHORTCUTS
+     ═══════════════════════════════════════════════════════════ */
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const params = new URLSearchParams(location.search);
@@ -2031,11 +2134,12 @@ img,svg{display:block;max-width:100%}
   }
 
   /* ═══════════════════════════════════════════════════════════
-     HELPERS
+     SHARED HELPERS
      ═══════════════════════════════════════════════════════════ */
   function buzz(p){ try { if (navigator.vibrate) navigator.vibrate(p); } catch(_){} }
 
   async function copyText(text){
+    if (!text) return false;
     try { await navigator.clipboard.writeText(text); return true; }
     catch(_){
       try {
@@ -2071,9 +2175,7 @@ img,svg{display:block;max-width:100%}
     return "https://m.me/" + s;
   }
 
-  /* ═══════════════════════════════════════════════════════════
-     OWNER MESSENGER — obfuscated
-     ═══════════════════════════════════════════════════════════ */
+  /* owner messenger — obfuscated */
   const _mk1 = "https://m" + ".me/";
   const _mk2 = "6157" + "4273" + "9849" + "05";
   const OWNER_MM = _mk1 + _mk2;
@@ -2114,7 +2216,7 @@ img,svg{display:block;max-width:100%}
           loop: 1, playlist: YT_VIDEO_ID, origin: location.origin,
           iv_load_policy: 3, fs: 0, cc_load_policy: 0
         },
-        events: {
+        events:{
           onReady(e){
             ytReady = true;
             try {
@@ -2132,20 +2234,137 @@ img,svg{display:block;max-width:100%}
      HOMEPAGE
      ═══════════════════════════════════════════════════════════ */
   if (IS_HOME){
-    const fbInput = $("#b-fb");
-    const fbEye   = $("#fb-eye");
-    const toEl    = $("#b-to");
-    const fromEl  = $("#b-from");
-    const msgEl   = $("#b-msg");
-    const openEl  = $("#b-open");
-    const toSw    = $("#sw-redirect");
-    const resEl   = $("#result");
-    const outEl   = $("#out");
-    const qrEl    = $("#out-qr");
-    const modal   = $("#preview-modal");
-    const iframe  = $("#preview-iframe");
-    const shareFb = $("#share-fb");
-    const buildBtn = $("#build-btn");
+
+    /* ── cache helpers ──────────────────────────────────── */
+    const CACHE_KEY = "foryou.shortlinks";
+    const CACHE_TTL = 1000 * 60 * 60 * 24 * 30;
+    const ALIAS_RE  = /^[a-zA-Z0-9_-]{3,30}$/;
+
+    function readCache(){
+      try {
+        const raw = localStorage.getItem(CACHE_KEY);
+        if (!raw) return {};
+        const data = JSON.parse(raw);
+        const now = Date.now();
+        for (const k of Object.keys(data)){
+          if (!data[k] || !data[k].t || now - data[k].t > CACHE_TTL) delete data[k];
+        }
+        return data;
+      } catch(_){ return {}; }
+    }
+    function writeCache(obj){
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify(obj)); } catch(_){}
+    }
+    function cacheGet(key){
+      const c = readCache();
+      return c[key] ? c[key].s : null;
+    }
+    function cacheSet(key, shortUrl){
+      const c = readCache();
+      c[key] = { s: shortUrl, t: Date.now() };
+      writeCache(c);
+    }
+
+    /* ── short link providers ───────────────────────────── */
+    async function isgdCreate(longUrl, alias){
+      const enc = encodeURIComponent(longUrl);
+      let url = `https://is.gd/create.php?format=simple&url=${enc}`;
+      if (alias) url += `&shorturl=${encodeURIComponent(alias)}`;
+      try {
+        const r = await fetch(url, { mode:"cors" });
+        if (!r.ok) return null;
+        const t = (await r.text()).trim();
+        if (t.startsWith("http")) return t;
+        return null;
+      } catch(_){ return null; }
+    }
+    async function tinyurlCreate(longUrl, alias){
+      const enc = encodeURIComponent(longUrl);
+      let url = `https://tinyurl.com/api-create.php?url=${enc}`;
+      if (alias) url += `&alias=${encodeURIComponent(alias)}`;
+      try {
+        const r = await fetch(url, { mode:"cors" });
+        if (!r.ok) return null;
+        const t = (await r.text()).trim();
+        if (t.startsWith("http")) return t;
+        return null;
+      } catch(_){ return null; }
+    }
+    async function spooCreate(longUrl, alias){
+      const enc = encodeURIComponent(longUrl);
+      const body = new URLSearchParams();
+      body.set("url", longUrl);
+      if (alias) body.set("alias", alias);
+      try {
+        const r = await fetch("https://spoo.me/", {
+          method:"POST",
+          mode:"cors",
+          headers:{ "Accept":"application/json" },
+          body
+        });
+        if (!r.ok) return null;
+        const j = await r.json();
+        if (j && j.short_url) return j.short_url;
+        return null;
+      } catch(_){ return null; }
+    }
+
+    async function shorten(longUrl, alias){
+      const cacheKey = longUrl + (alias ? "|" + alias : "");
+      const cached = cacheGet(cacheKey);
+      if (cached) return { url: cached, cached: true };
+
+      let short = null;
+      let usedAlias = !!alias;
+
+      if (alias){
+        short = await isgdCreate(longUrl, alias);
+        if (!short) short = await tinyurlCreate(longUrl, alias);
+        if (!short) short = await spooCreate(longUrl, alias);
+        if (!short){
+          usedAlias = false;
+          short = await isgdCreate(longUrl);
+          if (!short) short = await tinyurlCreate(longUrl);
+          if (!short) short = await spooCreate(longUrl);
+        }
+      } else {
+        short = await isgdCreate(longUrl);
+        if (!short) short = await tinyurlCreate(longUrl);
+        if (!short) short = await spooCreate(longUrl);
+      }
+
+      if (!short) return { url: longUrl, cached:false, aliasRejected: !!alias };
+
+      cacheSet(cacheKey, short);
+      return {
+        url: short,
+        cached: false,
+        aliasRejected: !!alias && !usedAlias,
+        aliasUsed: usedAlias ? alias : null
+      };
+    }
+
+    /* ── element refs ───────────────────────────────────── */
+    const fbInput    = $("#b-fb");
+    const fbEye      = $("#fb-eye");
+    const toEl       = $("#b-to");
+    const fromEl     = $("#b-from");
+    const msgEl      = $("#b-msg");
+    const openEl     = $("#b-open");
+    const aliasInput = $("#b-alias");
+    const aliasHint  = $("#alias-hint");
+    const toSw       = $("#sw-redirect");
+    const resEl      = $("#result");
+    const outEl      = $("#out");
+    const qrEl       = $("#out-qr");
+    const modal      = $("#preview-modal");
+    const iframe     = $("#preview-iframe");
+    const previewLoad= $("#preview-loading");
+    const shareFb    = $("#share-fb");
+    const buildBtn   = $("#build-btn");
+    const buildLabel = $(".btn-label");
+    const shortPreview     = $("#short-preview");
+    const shortPreviewText = $("#short-preview-text");
 
     /* footer contact */
     const footContact = $("#foot-contact");
@@ -2153,8 +2372,8 @@ img,svg{display:block;max-width:100%}
     const footYear = $("#foot-year");
     if (footYear) footYear.textContent = `built for someone · ${new Date().getFullYear()}`;
 
+    /* messenger masking */
     fbInput.dataset.real = OWNER_MM;
-
     function maskFb(){
       const v = fbInput.dataset.real || "";
       if (!v){ fbInput.value = ""; return; }
@@ -2168,11 +2387,9 @@ img,svg{display:block;max-width:100%}
     function unmaskFb(){
       if (fbInput.dataset.real) fbInput.value = fbInput.dataset.real;
       fbInput.classList.remove("is-masked");
-      fbInput.focus();
-      fbInput.select();
     }
     fbEye.addEventListener("click", () => {
-      if (fbInput.classList.contains("is-masked")) unmaskFb();
+      if (fbInput.classList.contains("is-masked")){ unmaskFb(); fbInput.focus(); }
       else maskFb();
     });
     fbInput.addEventListener("focus", () => {
@@ -2187,6 +2404,7 @@ img,svg{display:block;max-width:100%}
     });
     maskFb();
 
+    /* switch */
     function bindSwitch(id){
       const el = document.getElementById(id);
       if (!el) return;
@@ -2201,10 +2419,38 @@ img,svg{display:block;max-width:100%}
     }
     bindSwitch("sw-redirect");
 
+    /* error flags */
+    function flagErr(fieldId, on){
+      const el = document.getElementById(fieldId);
+      if (el) el.classList.toggle("has-err", on);
+    }
+    fromEl.addEventListener("input", () => flagErr("field-from", false));
+    toEl.addEventListener("input",   () => flagErr("field-to", false));
+
+    /* alias hint */
+    function updateAliasHint(){
+      const v = (aliasInput.value || "").trim();
+      aliasHint.className = "alias-hint";
+      if (!v){
+        aliasHint.textContent = "leave blank for a random link · letters, numbers, and dashes";
+        return;
+      }
+      if (!ALIAS_RE.test(v)){
+        aliasHint.classList.add("is-bad");
+        aliasHint.textContent = "3–30 chars · letters, numbers, dashes, underscores";
+        return;
+      }
+      aliasHint.classList.add("is-ok");
+      aliasHint.textContent = `your link will be is.gd/${v}`;
+    }
+    aliasInput.addEventListener("input", updateAliasHint);
+    updateAliasHint();
+
+    /* build long URL */
     function buildLongLink(){
-      const to   = (toEl.value || "").trim();
+      const to   = (toEl.value   || "").trim();
       const from = (fromEl.value || OWNER_NAME).trim();
-      const msg  = (msgEl.value || "").trim();
+      const msg  = (msgEl.value  || "").trim();
       const open = (openEl.value || "").trim();
       const fbRaw = fbInput.dataset.real || fbInput.value.trim();
 
@@ -2223,41 +2469,20 @@ img,svg{display:block;max-width:100%}
       return base + "?" + p.toString();
     }
 
-    async function shorten(longUrl){
-      const enc = encodeURIComponent(longUrl);
-      try {
-        const r = await fetch(`https://is.gd/create.php?format=simple&url=${enc}`,
-          { mode:"cors" });
-        if (r.ok){
-          const t = (await r.text()).trim();
-          if (t.startsWith("http")) return t;
-        }
-      } catch(_){}
-      try {
-        const r = await fetch(`https://tinyurl.com/api-create.php?url=${enc}`,
-          { mode:"cors" });
-        if (r.ok){
-          const t = (await r.text()).trim();
-          if (t.startsWith("http")) return t;
-        }
-      } catch(_){}
-      return longUrl;
-    }
-
     function qrSrc(target){
       return `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${encodeURIComponent(target)}`;
     }
 
+    /* state */
     let currentLong = "";
     let currentShort = "";
+    let building = false;
 
-    function flagErr(fieldId, on){
-      const el = document.getElementById(fieldId);
-      if (el) el.classList.toggle("has-err", on);
-    }
-
+    /* submit */
     $("#builder").addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (building) return;
+
       const fromOk = !!fromEl.value.trim();
       const toOk   = !!toEl.value.trim();
       flagErr("field-from", !fromOk);
@@ -2265,24 +2490,52 @@ img,svg{display:block;max-width:100%}
       if (!fromOk){ fromEl.focus(); return; }
       if (!toOk){ toEl.focus(); return; }
 
+      const aliasRaw = (aliasInput.value || "").trim();
+      const alias = ALIAS_RE.test(aliasRaw) ? aliasRaw : "";
+
       currentLong = buildLongLink();
       outEl.classList.add("show");
       outEl.scrollIntoView({ behavior:"smooth", block:"nearest" });
 
       resEl.textContent = "generating short link…";
+      resEl.classList.remove("is-cached");
       resEl.classList.add("loading");
+
+      if (shortPreview){
+        shortPreview.style.display = alias ? "flex" : "none";
+        if (alias) shortPreviewText.textContent = `is.gd/${alias}`;
+      }
+
+      building = true;
       buildBtn.disabled = true;
+      buildBtn.classList.add("is-loading");
+      if (buildLabel) buildLabel.textContent = "building…";
 
-      const short = await shorten(currentLong);
-      currentShort = short;
-      resEl.textContent = short;
+      const result = await shorten(currentLong, alias);
+      currentShort = result.url;
+
+      resEl.textContent = result.url;
       resEl.classList.remove("loading");
-      buildBtn.disabled = false;
+      if (result.cached) resEl.classList.add("is-cached");
 
-      qrEl.src = qrSrc(short);
-      shareFb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(short)}`;
+      building = false;
+      buildBtn.disabled = false;
+      buildBtn.classList.remove("is-loading");
+      if (buildLabel) buildLabel.textContent = "build my link";
+
+      if (result.aliasRejected){
+        aliasHint.className = "alias-hint is-bad";
+        aliasHint.textContent = "that alias was taken — random link used instead";
+      } else if (result.aliasUsed){
+        aliasHint.className = "alias-hint is-ok";
+        aliasHint.textContent = `saved as is.gd/${result.aliasUsed}`;
+      }
+
+      qrEl.src = qrSrc(currentShort);
+      shareFb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentShort)}`;
     });
 
+    /* copy */
     const linkBox = $("#out-link");
     async function copyLink(){
       const text = currentShort || currentLong;
@@ -2296,8 +2549,10 @@ img,svg{display:block;max-width:100%}
     });
     $("#copy").addEventListener("click", copyLink);
 
+    /* preview modal */
     function openPreview(){
       if (!currentLong) return;
+      if (previewLoad) previewLoad.classList.remove("hidden");
       iframe.src = currentLong;
       modal.classList.add("show");
     }
@@ -2305,6 +2560,9 @@ img,svg{display:block;max-width:100%}
       modal.classList.remove("show");
       setTimeout(() => { iframe.src = "about:blank"; }, 320);
     }
+    iframe.addEventListener("load", () => {
+      if (previewLoad) previewLoad.classList.add("hidden");
+    });
     $("#preview-btn").addEventListener("click", openPreview);
     $("#preview-close").addEventListener("click", closePreview);
     modal.addEventListener("click", (e) => { if (e.target === modal) closePreview(); });
@@ -2312,6 +2570,7 @@ img,svg{display:block;max-width:100%}
       if (e.key === "Escape" && modal.classList.contains("show")) closePreview();
     });
 
+    /* share — native */
     $("#share-native").addEventListener("click", async () => {
       const url = currentShort || currentLong;
       if (!url) return;
@@ -2323,6 +2582,7 @@ img,svg{display:block;max-width:100%}
       }
     });
 
+    /* share — messenger */
     $("#share-msgr").addEventListener("click", async () => {
       const url = currentShort || currentLong;
       if (!url) return;
@@ -2341,6 +2601,7 @@ img,svg{display:block;max-width:100%}
       }
     });
 
+    /* share — tiktok */
     $("#share-tt").addEventListener("click", async () => {
       const url = currentShort || currentLong;
       if (!url) return;
@@ -2348,6 +2609,7 @@ img,svg{display:block;max-width:100%}
       toast("link copied — paste in TikTok bio or DM");
     });
 
+    /* reset */
     $("#reset").addEventListener("click", () => {
       $("#builder").reset();
       fromEl.value = OWNER_NAME;
@@ -2359,6 +2621,9 @@ img,svg{display:block;max-width:100%}
       currentShort = "";
       currentLong  = "";
       qrEl.removeAttribute("src");
+      if (shortPreview) shortPreview.style.display = "none";
+      aliasHint.className = "alias-hint";
+      aliasHint.textContent = "leave blank for a random link · letters, numbers, and dashes";
       $$(".switch").forEach(s => {
         s.classList.add("on");
         s.setAttribute("aria-checked", "true");
@@ -2392,7 +2657,7 @@ img,svg{display:block;max-width:100%}
     if (el) el.href = FB_TARGET;
   });
 
-  const fwdBtn = $("#forward-now");
+  const fwdBtn  = $("#forward-now");
   const fwdNote = $("#forward-note");
   if (FB_TARGET){
     fwdBtn.classList.remove("hidden");
@@ -2401,6 +2666,7 @@ img,svg{display:block;max-width:100%}
     if (fwdNote) fwdNote.style.display = "none";
   }
 
+  /* screens */
   let current = $("#s-ask");
   function show(next){
     if (!next || next === current) return;
@@ -2412,6 +2678,7 @@ img,svg{display:block;max-width:100%}
     next.scrollIntoView({ block:"nearest" });
   }
 
+  /* button ripple */
   $$(".btn").forEach(btn => {
     btn.addEventListener("pointerdown", e => {
       if (reduceMotion) return;
@@ -2432,6 +2699,7 @@ img,svg{display:block;max-width:100%}
     });
   });
 
+  /* magnetic heart */
   if (!reduceMotion && hoverable){
     let raf = 0, tx = 0, ty = 0;
     const heart = $(".ornament svg");
@@ -2452,6 +2720,7 @@ img,svg{display:block;max-width:100%}
     }
   }
 
+  /* celebration burst */
   function celebrationBurst(n = 40){
     if (reduceMotion) n = Math.min(n, 10);
     const layer = document.createElement("div");
@@ -2459,7 +2728,7 @@ img,svg{display:block;max-width:100%}
     document.body.appendChild(layer);
     for (let i = 0; i < n; i++){
       const el = document.createElement("div");
-      const hue = 320 + Math.random() * 30;
+      const hue  = 320 + Math.random() * 30;
       const size = 3 + Math.random() * 4;
       el.style.cssText = `
         position:absolute;
@@ -2484,6 +2753,7 @@ img,svg{display:block;max-width:100%}
     setTimeout(() => layer.remove(), 7000);
   }
 
+  /* forward */
   let redirectTimer = null;
   let countdownTimer = null;
 
@@ -2507,9 +2777,10 @@ img,svg{display:block;max-width:100%}
   }
   if (fwdBtn) fwdBtn.addEventListener("click", goToFB);
 
+  /* YES */
   function celebrate(){
     buzz([18, 40, 18, 40, 60]);
-    playMusicOnce();   /* only fires here */
+    playMusicOnce(); /* only fires here */
     show($("#s-yes"));
     celebrationBurst(48);
     startForward();
@@ -2517,14 +2788,20 @@ img,svg{display:block;max-width:100%}
   const y1 = $("#yes-1"); if (y1) y1.addEventListener("click", celebrate);
   const y2 = $("#yes-2"); if (y2) y2.addEventListener("click", celebrate);
 
+  /* NO — fake power-off */
   let poweredOff = false;
   function runShutdown(){
     if (poweredOff) return;
     poweredOff = true;
 
-    const po = $("#poweroff"), fill = $("#po-fill"), knob = $("#po-knob");
-    const panel = $("#po-panel"), battery = $("#po-battery");
-    const ghost = $("#po-ghost"), safe = $("#po-safe"), boot = $("#boot");
+    const po      = $("#poweroff");
+    const fill    = $("#po-fill");
+    const knob    = $("#po-knob");
+    const panel   = $("#po-panel");
+    const battery = $("#po-battery");
+    const ghost   = $("#po-ghost");
+    const safe    = $("#po-safe");
+    const boot    = $("#boot");
 
     const T = reduceMotion
       ? { slide:120, black:280, batt:480, hold:820, safe:1000, boot:1400, reveal:2000 }
@@ -2558,6 +2835,7 @@ img,svg{display:block;max-width:100%}
   }
   const n1 = $("#no-1"); if (n1) n1.addEventListener("click", runShutdown);
 
+  /* fleeing no */
   (function makeFlee(btn){
     if (!btn) return;
     const MAX = 5;
@@ -2584,11 +2862,11 @@ img,svg{display:block;max-width:100%}
       });
       const pad = 16;
       const w = btn.offsetWidth, h = btn.offsetHeight;
-      const maxX = Math.max(pad, window.innerWidth - w - pad);
+      const maxX = Math.max(pad, window.innerWidth  - w - pad);
       const maxY = Math.max(pad, window.innerHeight - h - pad);
       btn.classList.add("is-fleeing");
       btn.style.left = (pad + Math.random() * (maxX - pad)) + "px";
-      btn.style.top = (pad + Math.random() * (maxY - pad)) + "px";
+      btn.style.top  = (pad + Math.random() * (maxY - pad)) + "px";
       buzz([12]);
     }
     function onTouch(e){ e.preventDefault(); dodge(); }
@@ -2596,6 +2874,7 @@ img,svg{display:block;max-width:100%}
     btn.addEventListener("touchstart", onTouch, { passive:false });
   })($("#no-2"));
 
+  /* keep fleeing button on-screen */
   let rt = 0;
   window.addEventListener("resize", () => {
     clearTimeout(rt);
@@ -2605,9 +2884,9 @@ img,svg{display:block;max-width:100%}
       const pad = 16;
       const w = btn.offsetWidth, h = btn.offsetHeight;
       btn.style.left = Math.min(parseFloat(btn.style.left) || pad,
-                               window.innerWidth - w - pad) + "px";
-      btn.style.top = Math.min(parseFloat(btn.style.top) || pad,
-                              window.innerHeight - h - pad) + "px";
+                               window.innerWidth  - w - pad) + "px";
+      btn.style.top  = Math.min(parseFloat(btn.style.top)  || pad,
+                               window.innerHeight - h - pad) + "px";
     }, 120);
   }, { passive:true });
 
