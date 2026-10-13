@@ -28,6 +28,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
 
 <style>
+/* ═════════════════════════════════════════════════════════════════
+   TOKENS
+   ═════════════════════════════════════════════════════════════════ */
 :root{
   --c-bg-0:#0b0710; --c-bg-1:#0f0a14; --c-bg-2:#17101f; --c-bg-3:#1f1529;
   --c-line:rgba(255,255,255,.08); --c-line-strong:rgba(255,255,255,.14);
@@ -39,12 +42,15 @@
   --font-mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
   --t-display:clamp(2rem,5.5vw + .5rem,3.75rem);
   --t-h1:clamp(1.375rem,2.4vw + .75rem,2rem);
+  --t-h2:clamp(1.0625rem,1.4vw + .65rem,1.375rem);
   --t-body:clamp(.9375rem,.4vw + .81rem,1.0625rem);
   --t-sm:clamp(.8125rem,.2vw + .75rem,.875rem);
   --t-xs:clamp(.6875rem,.15vw + .64rem,.75rem);
-  --s-3:clamp(.75rem,1.4vw,1rem); --s-4:clamp(1rem,1.8vw,1.375rem);
-  --s-5:clamp(1.375rem,2.6vw,2rem); --s-6:clamp(1.875rem,3.6vw,2.75rem);
-  --gutter:clamp(1rem,4vw,2rem); --max-w:1180px; --max-form:720px;
+  --s-2:clamp(.5rem,.9vw,.75rem); --s-3:clamp(.75rem,1.4vw,1rem);
+  --s-4:clamp(1rem,1.8vw,1.375rem); --s-5:clamp(1.375rem,2.6vw,2rem);
+  --s-6:clamp(1.875rem,3.6vw,2.75rem); --s-7:clamp(2.5rem,6vw,4rem);
+  --gutter:clamp(1rem,4vw,2rem);
+  --max-w:1180px; --max-form:720px;
   --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:22px; --r-pill:999px;
   --dur-1:.16s; --dur-2:.28s; --dur-3:.5s;
   --ease:cubic-bezier(.22,1,.36,1); --ease-out:cubic-bezier(.16,1,.3,1);
@@ -62,8 +68,8 @@ body{
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
   -webkit-tap-highlight-color:transparent;
 }
-body.view-confession{overflow:hidden;overscroll-behavior:none}
-body.view-home{overflow-x:hidden}
+body.view-letter{overflow:hidden;overscroll-behavior:none}
+body.view-home,body.view-create{overflow-x:hidden}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 input,select{font:inherit;color:inherit}
 a{color:var(--c-rose-1);text-decoration:none}
@@ -74,6 +80,7 @@ img,svg{display:block;max-width:100%}
 :focus-visible{outline:2px solid var(--c-rose-2);outline-offset:2px;border-radius:4px}
 ::selection{background:var(--c-rose-3);color:#fff}
 
+/* atmosphere */
 .atmos{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .atmos__base{position:absolute;inset:0;background:
   radial-gradient(140% 90% at 50% -20%,
@@ -95,6 +102,7 @@ img,svg{display:block;max-width:100%}
 .container{width:100%;max-width:var(--max-w);margin:0 auto;
   padding-inline:clamp(1.125rem,4vw,2rem)}
 
+/* nav */
 .nav{display:flex;align-items:center;justify-content:space-between;
   padding-block:clamp(1rem,2.4vw,1.5rem);border-bottom:1px solid var(--c-line)}
 .nav__brand{font:600 1rem/1 var(--font-sans);letter-spacing:-.015em;
@@ -114,7 +122,49 @@ img,svg{display:block;max-width:100%}
 .nav__cta:hover{border-color:var(--c-rose-2);background:rgba(224,114,158,.06)}
 @media (max-width:34rem){.nav__links a:not(.nav__cta){display:none}}
 
+/* buttons */
+.btn-primary{width:100%;display:inline-flex;align-items:center;
+  justify-content:center;gap:10px;padding:14px 20px;
+  font-size:.9375rem;font-weight:600;letter-spacing:-.005em;
+  color:#fff;border-radius:var(--r-md);
+  background:linear-gradient(180deg,var(--c-rose-2),var(--c-rose-3));
+  box-shadow:0 1px 0 rgba(255,255,255,.15) inset,
+    0 1px 2px rgba(0,0,0,.4),
+    0 8px 24px -8px rgba(224,114,158,.4);
+  transition:transform var(--dur-1) var(--ease),
+    box-shadow var(--dur-2) var(--ease),opacity var(--dur-2) var(--ease)}
+.btn-primary:hover{box-shadow:0 1px 0 rgba(255,255,255,.2) inset,
+  0 1px 2px rgba(0,0,0,.4),
+  0 12px 30px -8px rgba(224,114,158,.55)}
+.btn-primary:active{transform:translateY(1px)}
+.btn-primary:disabled{opacity:.6;cursor:wait}
+.btn-primary svg{width:15px;height:15px}
+.btn-primary.is-loading svg{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.btn-ghost{display:inline-flex;align-items:center;justify-content:center;
+  gap:7px;padding:10px 16px;font-size:var(--t-sm);font-weight:600;
+  color:var(--c-fg-mid);background:transparent;
+  border:1px solid var(--c-line-strong);border-radius:var(--r-md);
+  transition:all var(--dur-2) var(--ease)}
+.btn-ghost:hover{color:var(--c-fg);border-color:var(--c-rose-3);
+  background:rgba(224,114,158,.06)}
+.btn-ghost svg{width:14px;height:14px;fill:currentColor}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:24px;z-index:9800;
+  transform:translateX(-50%) translateY(14px);padding:11px 18px;
+  background:var(--c-ok);color:#062616;font-size:var(--t-sm);
+  font-weight:600;border-radius:var(--r-pill);opacity:0;pointer-events:none;
+  transition:all var(--dur-2) var(--ease);
+  box-shadow:0 10px 28px -8px rgba(79,179,131,.55)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ═════════════════════════════════════════════════════════════════
+   HOME
+   ═════════════════════════════════════════════════════════════════ */
 .home{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column}
+
 .hero{padding-block:clamp(3rem,8vw,6rem) clamp(2rem,5vw,3.5rem);
   max-width:min(820px,100%);margin-inline:auto;text-align:center}
 .hero__badge{display:inline-flex;align-items:center;gap:8px;
@@ -152,16 +202,20 @@ img,svg{display:block;max-width:100%}
 .hero__cta--ghost{color:var(--c-fg-mid);border:1px solid var(--c-line-strong)}
 .hero__cta--ghost:hover{color:var(--c-fg);text-decoration:none;
   border-color:var(--c-rose-3);background:rgba(224,114,158,.05)}
-.hero__stats{display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;max-width:600px;margin-inline:auto;background:var(--c-line);
-  border:1px solid var(--c-line);border-radius:var(--r-md);overflow:hidden}
-.hero__stat{padding:16px 12px;background:var(--c-bg-1);text-align:center}
-.hero__stat-n{font-family:var(--font-serif);font-weight:500;
+
+/* trust bar */
+.trust{display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;max-width:600px;margin-inline:auto;
+  background:var(--c-line);border:1px solid var(--c-line);
+  border-radius:var(--r-md);overflow:hidden}
+.trust__item{padding:16px 12px;background:var(--c-bg-1);text-align:center}
+.trust__n{font-family:var(--font-serif);font-weight:500;
   font-size:clamp(1.25rem,2.2vw,1.625rem);letter-spacing:-.02em;
   color:var(--c-rose-1);line-height:1.1;margin-bottom:4px}
-.hero__stat-l{font-size:var(--t-xs);font-weight:500;
+.trust__l{font-size:var(--t-xs);font-weight:500;
   letter-spacing:.06em;text-transform:uppercase;color:var(--c-fg-dim)}
 
+/* sections */
 .section{padding-block:clamp(3rem,7vw,5rem)}
 .section__head{text-align:center;max-width:52ch;margin:0 auto var(--s-6)}
 .section__eyebrow{display:inline-block;font-size:var(--t-xs);font-weight:600;
@@ -172,25 +226,186 @@ img,svg{display:block;max-width:100%}
   letter-spacing:-.024em;text-wrap:balance;margin-bottom:12px}
 .section__lede{color:var(--c-fg-soft);font-size:var(--t-body);text-wrap:pretty}
 
-.form-card{position:relative;
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);
+  gap:var(--s-4);margin-top:var(--s-6)}
+@media (max-width:48rem){.steps{grid-template-columns:1fr}}
+.step{position:relative;padding:var(--s-5) var(--s-4);
+  border:1px solid var(--c-line);border-radius:var(--r-lg);
+  background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+  transition:border-color var(--dur-2) var(--ease)}
+.step:hover{border-color:var(--c-line-strong)}
+.step__n{display:inline-flex;align-items:center;justify-content:center;
+  width:28px;height:28px;border-radius:8px;
+  font-family:var(--font-serif);font-weight:600;font-size:.875rem;
+  color:var(--c-rose-1);background:rgba(224,114,158,.1);
+  border:1px solid rgba(224,114,158,.22);margin-bottom:16px}
+.step__title{font-size:1rem;font-weight:600;letter-spacing:-.01em;
+  margin-bottom:8px;color:var(--c-fg)}
+.step__body{color:var(--c-fg-soft);font-size:var(--t-sm);line-height:1.6}
+
+/* features */
+.features{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:1px;border:1px solid var(--c-line);border-radius:var(--r-lg);
+  overflow:hidden;background:var(--c-line);margin-top:var(--s-5)}
+.feature{padding:var(--s-5) var(--s-4);background:var(--c-bg-1);
+  transition:background var(--dur-2) var(--ease)}
+.feature:hover{background:var(--c-bg-2)}
+.feature__icon{width:32px;height:32px;display:grid;place-items:center;
+  border-radius:var(--r-sm);background:rgba(224,114,158,.1);
+  border:1px solid rgba(224,114,158,.2);color:var(--c-rose-1);
+  margin-bottom:14px}
+.feature__icon svg{width:16px;height:16px;fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.feature h3{font-size:.9375rem;font-weight:600;letter-spacing:-.005em;
+  margin-bottom:6px;color:var(--c-fg)}
+.feature p{color:var(--c-fg-soft);font-size:var(--t-sm);line-height:1.55}
+
+/* checklist */
+.checklist{display:grid;grid-template-columns:repeat(2,1fr);
+  gap:var(--s-4);max-width:760px;margin:var(--s-6) auto 0}
+@media (max-width:48rem){.checklist{grid-template-columns:1fr}}
+.check{display:flex;align-items:flex-start;gap:12px;
+  padding:16px 18px;border:1px solid var(--c-line);
+  border-radius:var(--r-lg);background:rgba(255,255,255,.015)}
+.check__mark{width:22px;height:22px;flex:0 0 auto;
+  border-radius:50%;display:grid;place-items:center;
+  background:rgba(79,179,131,.14);border:1px solid rgba(79,179,131,.3);
+  color:var(--c-ok);margin-top:2px}
+.check__mark svg{width:12px;height:12px;fill:none;stroke:currentColor;
+  stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.check__body{font-size:var(--t-sm);color:var(--c-fg-mid);line-height:1.55}
+.check__body strong{color:var(--c-fg);font-weight:600;display:block;
+  margin-bottom:2px;font-size:.9375rem}
+
+/* sample preview */
+.samples{display:grid;grid-template-columns:repeat(2,1fr);
+  gap:var(--s-5);align-items:center;margin-top:var(--s-6)}
+@media (max-width:56rem){.samples{grid-template-columns:1fr}}
+.samples__copy h3{font-family:var(--font-serif);font-weight:500;
+  font-size:clamp(1.25rem,2.4vw,1.75rem);letter-spacing:-.02em;
+  line-height:1.18;margin-bottom:14px}
+.samples__copy p{color:var(--c-fg-soft);margin-bottom:16px;text-wrap:pretty}
+.samples__list{list-style:none;display:grid;gap:10px;margin-top:18px}
+.samples__list li{display:flex;align-items:flex-start;gap:10px;
+  font-size:var(--t-sm);color:var(--c-fg-mid)}
+.samples__list li::before{content:"";flex:0 0 auto;
+  width:14px;height:14px;margin-top:3px;background:var(--c-rose-2);
+  clip-path:polygon(50% 0, 60% 35%, 100% 40%, 65% 60%, 78% 100%, 50% 75%, 22% 100%, 35% 60%, 0 40%, 40% 35%)}
+.samples__visual{position:relative;border-radius:var(--r-xl);
+  border:1px solid var(--c-line);overflow:hidden;
+  background:linear-gradient(180deg, var(--c-bg-2), var(--c-bg-1));
+  aspect-ratio:4/3;display:grid;place-items:center;padding:var(--s-5)}
+.samples__card{width:min(280px, 88%);padding:28px 22px;text-align:center;
+  border-radius:var(--r-xl);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--c-line-strong);
+  box-shadow:0 4px 16px -4px rgba(0,0,0,.5);
+  backdrop-filter:blur(14px)}
+.samples__card .eyebrow-mini{font-size:var(--t-xs);font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--c-fg-dim);
+  margin-bottom:14px;display:block}
+.samples__card h4{font-family:var(--font-serif);font-weight:500;
+  font-size:clamp(1.25rem,3vw,1.5rem);letter-spacing:-.02em;
+  line-height:1.15;margin-bottom:10px}
+.samples__card h4 em{font-style:italic;
+  background:linear-gradient(100deg,var(--c-rose-1),var(--c-rose-2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  padding-right:.04em}
+.samples__card p{font-size:var(--t-sm);color:var(--c-fg-soft);margin-bottom:18px}
+.samples__card .row-mini{display:flex;gap:8px;justify-content:center}
+.samples__card .chip-yes,
+.samples__card .chip-no{padding:8px 16px;border-radius:10px;
+  font-size:.8125rem;font-weight:600}
+.samples__card .chip-yes{background:linear-gradient(180deg,var(--c-rose-2),var(--c-rose-3));
+  color:#fff;box-shadow:0 8px 20px -8px rgba(224,114,158,.6)}
+.samples__card .chip-no{border:1px solid var(--c-line-strong);color:var(--c-fg-soft)}
+
+/* faq */
+.faq{max-width:760px;margin:var(--s-6) auto 0;display:grid;gap:1px;
+  border:1px solid var(--c-line);border-radius:var(--r-lg);
+  overflow:hidden;background:var(--c-line)}
+.faq details{background:var(--c-bg-1);transition:background var(--dur-2) var(--ease)}
+.faq details[open]{background:var(--c-bg-2)}
+.faq summary{list-style:none;display:flex;align-items:center;
+  justify-content:space-between;gap:16px;padding:18px 20px;
+  cursor:pointer;font-size:var(--t-body);font-weight:500;
+  color:var(--c-fg);user-select:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";flex:0 0 auto;width:14px;height:14px;
+  background:currentColor;
+  clip-path:polygon(45% 0, 55% 0, 55% 45%, 100% 45%, 100% 55%, 55% 55%, 55% 100%, 45% 100%, 45% 55%, 0 55%, 0 45%, 45% 45%);
+  opacity:.55;transition:transform var(--dur-2) var(--ease)}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq__body{padding:0 20px 20px;color:var(--c-fg-soft);
+  font-size:var(--t-sm);line-height:1.65;max-width:64ch}
+
+/* cta band */
+.cta-band{margin-top:var(--s-7);padding:var(--s-6) var(--s-4);
+  border-radius:var(--r-xl);text-align:center;
+  background:linear-gradient(180deg, rgba(224,114,158,.08), rgba(224,114,158,.02));
+  border:1px solid rgba(224,114,158,.18)}
+.cta-band h3{font-family:var(--font-serif);font-weight:500;
+  font-size:clamp(1.5rem,2.6vw,2rem);letter-spacing:-.02em;margin-bottom:10px}
+.cta-band p{color:var(--c-fg-mid);margin-bottom:var(--s-5);
+  max-width:44ch;margin-inline:auto}
+.cta-band .hero__cta--primary{display:inline-flex;padding:14px 28px}
+
+/* footer */
+.site-foot{margin-top:var(--s-6);padding-block:var(--s-6) var(--s-5);
+  border-top:1px solid var(--c-line)}
+.foot__grid{display:grid;grid-template-columns:1.6fr repeat(3, 1fr);
+  gap:var(--s-5);margin-bottom:var(--s-6)}
+@media (max-width:48rem){.foot__grid{grid-template-columns:1fr 1fr;gap:var(--s-5)}}
+@media (max-width:28rem){.foot__grid{grid-template-columns:1fr}}
+.foot__brand .nav__brand{margin-bottom:12px}
+.foot__brand p{color:var(--c-fg-soft);font-size:var(--t-sm);
+  max-width:34ch;line-height:1.6}
+.foot__col h4{font-size:var(--t-xs);font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--c-fg-dim);margin-bottom:14px}
+.foot__col a{display:block;color:var(--c-fg-soft);font-size:var(--t-sm);
+  padding:5px 0;transition:color var(--dur-1) var(--ease)}
+.foot__col a:hover{color:var(--c-fg);text-decoration:none}
+.foot__contact{display:inline-flex;align-items:center;gap:8px;
+  padding:10px 16px;border-radius:var(--r-pill);
+  border:1px solid var(--c-line-strong);color:var(--c-fg-soft);
+  font-size:var(--t-xs);font-weight:600;letter-spacing:.04em;
+  text-transform:uppercase;transition:all var(--dur-2) var(--ease)}
+.foot__contact:hover{color:var(--c-fg);border-color:var(--c-rose-3);
+  background:rgba(224,114,158,.06);text-decoration:none}
+.foot__contact svg{width:12px;height:12px;fill:currentColor}
+.foot__base{display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;padding-top:var(--s-4);
+  border-top:1px solid var(--c-line);color:var(--c-fg-dim);
+  font-size:var(--t-xs)}
+.foot__base p{max-width:60ch}
+
+/* ═════════════════════════════════════════════════════════════════
+   CREATE
+   ═════════════════════════════════════════════════════════════════ */
+.page{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column}
+.page__head{padding-block:clamp(2rem,5vw,3.5rem) clamp(1.5rem,3vw,2.5rem);
+  text-align:center;max-width:52ch;margin-inline:auto}
+.page__eyebrow{display:inline-block;font-size:var(--t-xs);font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--c-rose-2);
+  margin-bottom:14px}
+.page__title{font-family:var(--font-serif);font-weight:500;
+  font-size:clamp(1.75rem,4vw,2.75rem);line-height:1.12;
+  letter-spacing:-.026em;text-wrap:balance;margin-bottom:12px}
+.page__lede{color:var(--c-fg-soft);text-wrap:pretty}
+.page__body{padding-bottom:clamp(3rem,6vw,5rem)}
+
+.form-card{position:relative;max-width:var(--max-form);margin-inline:auto;
   background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
   border:1px solid var(--c-line);border-radius:var(--r-xl);
   padding:clamp(1.5rem,3.2vw,2.25rem);
-  box-shadow:var(--shadow-card);max-width:var(--max-form);
-  margin-inline:auto;isolation:isolate;overflow:hidden}
+  box-shadow:var(--shadow-card);isolation:isolate;overflow:hidden}
 .form-card::before{content:"";position:absolute;inset:0;border-radius:inherit;
   padding:1px;background:linear-gradient(140deg,
-    rgba(224,114,158,.35),
-    rgba(255,255,255,.04) 30%,
-    transparent 55%,
-    rgba(126,80,164,.28));
+    rgba(224,114,158,.35), rgba(255,255,255,.04) 30%,
+    transparent 55%, rgba(126,80,164,.28));
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.form-card__head{text-align:center;margin-bottom:var(--s-5);
-  padding-bottom:var(--s-4);border-bottom:1px solid var(--c-line)}
-.form-card__head h2{font-family:var(--font-serif);font-weight:500;
-  font-size:var(--t-h1);letter-spacing:-.02em;margin-bottom:6px}
-.form-card__head p{color:var(--c-fg-soft);font-size:var(--t-sm)}
 
 .field{margin-bottom:var(--s-4)}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
@@ -273,35 +488,6 @@ img,svg{display:block;max-width:100%}
 .switch.on{background:var(--c-rose-3);border-color:var(--c-rose-3)}
 .switch.on::after{transform:translateX(18px)}
 
-.btn-primary{width:100%;display:inline-flex;align-items:center;
-  justify-content:center;gap:10px;padding:14px 20px;
-  font-size:.9375rem;font-weight:600;letter-spacing:-.005em;
-  color:#fff;border-radius:var(--r-md);
-  background:linear-gradient(180deg,var(--c-rose-2),var(--c-rose-3));
-  box-shadow:0 1px 0 rgba(255,255,255,.15) inset,
-    0 1px 2px rgba(0,0,0,.4),
-    0 8px 24px -8px rgba(224,114,158,.4);
-  transition:transform var(--dur-1) var(--ease),
-    box-shadow var(--dur-2) var(--ease),opacity var(--dur-2) var(--ease);
-  margin-top:var(--s-5)}
-.btn-primary:hover{box-shadow:0 1px 0 rgba(255,255,255,.2) inset,
-  0 1px 2px rgba(0,0,0,.4),
-  0 12px 30px -8px rgba(224,114,158,.55)}
-.btn-primary:active{transform:translateY(1px)}
-.btn-primary:disabled{opacity:.6;cursor:wait}
-.btn-primary svg{width:15px;height:15px}
-.btn-primary.is-loading svg{animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.btn-ghost{display:inline-flex;align-items:center;justify-content:center;
-  gap:7px;padding:10px 16px;font-size:var(--t-sm);font-weight:600;
-  color:var(--c-fg-mid);background:transparent;
-  border:1px solid var(--c-line-strong);border-radius:var(--r-md);
-  transition:all var(--dur-2) var(--ease)}
-.btn-ghost:hover{color:var(--c-fg);border-color:var(--c-rose-3);
-  background:rgba(224,114,158,.06)}
-.btn-ghost svg{width:14px;height:14px;fill:currentColor}
-
 .out{margin-top:var(--s-5);padding-top:var(--s-5);
   border-top:1px solid var(--c-line);display:none}
 .out.show{display:block;animation:fade-up var(--dur-3) var(--ease-out)}
@@ -334,6 +520,7 @@ img,svg{display:block;max-width:100%}
   font-size:.75rem;color:var(--c-fg-dim);font-weight:400;font-style:italic}
 .out__link-hint{display:block;margin-top:4px;font-size:var(--t-xs);
   color:var(--c-fg-dim)}
+
 .share-row{display:grid;grid-template-columns:repeat(4,1fr);
   gap:8px;margin-bottom:var(--s-3)}
 @media (max-width:34rem){.share-row{grid-template-columns:repeat(2,1fr)}}
@@ -354,6 +541,7 @@ img,svg{display:block;max-width:100%}
   color:#fff;border-color:transparent;
   box-shadow:0 1px 0 rgba(255,255,255,.15) inset, 0 4px 14px -6px rgba(224,114,158,.5)}
 .share.primary:hover{color:#fff;border-color:transparent;transform:translateY(-1px)}
+
 .qr-block{display:flex;flex-direction:column;align-items:center;
   gap:10px;padding:20px;background:rgba(0,0,0,.28);
   border:1px solid var(--c-line);border-radius:var(--r-lg);
@@ -365,127 +553,6 @@ img,svg{display:block;max-width:100%}
 .qr-block__hint{font-size:var(--t-xs);color:var(--c-fg-soft);text-align:center}
 .out__actions{display:flex;gap:8px;flex-wrap:wrap}
 .out__actions > *{flex:1 1 auto;min-width:110px}
-
-.steps{display:grid;grid-template-columns:repeat(3,1fr);
-  gap:var(--s-4);margin-top:var(--s-6)}
-@media (max-width:48rem){.steps{grid-template-columns:1fr}}
-.step{position:relative;padding:var(--s-5) var(--s-4);
-  border:1px solid var(--c-line);border-radius:var(--r-lg);
-  background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
-  transition:border-color var(--dur-2) var(--ease)}
-.step:hover{border-color:var(--c-line-strong)}
-.step__n{display:inline-flex;align-items:center;justify-content:center;
-  width:28px;height:28px;border-radius:8px;
-  font-family:var(--font-serif);font-weight:600;font-size:.875rem;
-  color:var(--c-rose-1);background:rgba(224,114,158,.1);
-  border:1px solid rgba(224,114,158,.22);margin-bottom:16px}
-.step__title{font-size:1rem;font-weight:600;letter-spacing:-.01em;
-  margin-bottom:8px;color:var(--c-fg)}
-.step__body{color:var(--c-fg-soft);font-size:var(--t-sm);line-height:1.6}
-
-.features{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-  gap:1px;border:1px solid var(--c-line);border-radius:var(--r-lg);
-  overflow:hidden;background:var(--c-line);margin-top:var(--s-5)}
-.feature{padding:var(--s-5) var(--s-4);background:var(--c-bg-1);
-  transition:background var(--dur-2) var(--ease)}
-.feature:hover{background:var(--c-bg-2)}
-.feature__icon{width:32px;height:32px;display:grid;place-items:center;
-  border-radius:var(--r-sm);background:rgba(224,114,158,.1);
-  border:1px solid rgba(224,114,158,.2);color:var(--c-rose-1);
-  margin-bottom:14px}
-.feature__icon svg{width:16px;height:16px;fill:none;stroke:currentColor;
-  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.feature h3{font-size:.9375rem;font-weight:600;letter-spacing:-.005em;
-  margin-bottom:6px;color:var(--c-fg)}
-.feature p{color:var(--c-fg-soft);font-size:var(--t-sm);line-height:1.55}
-
-.samples{display:grid;grid-template-columns:repeat(2,1fr);
-  gap:var(--s-5);align-items:center;margin-top:var(--s-6)}
-@media (max-width:56rem){.samples{grid-template-columns:1fr}}
-.samples__copy h3{font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(1.25rem,2.4vw,1.75rem);letter-spacing:-.02em;
-  line-height:1.18;margin-bottom:14px}
-.samples__copy p{color:var(--c-fg-soft);margin-bottom:16px;text-wrap:pretty}
-.samples__list{list-style:none;display:grid;gap:10px;margin-top:18px}
-.samples__list li{display:flex;align-items:flex-start;gap:10px;
-  font-size:var(--t-sm);color:var(--c-fg-mid)}
-.samples__list li::before{content:"";flex:0 0 auto;
-  width:14px;height:14px;margin-top:3px;background:var(--c-rose-2);
-  clip-path:polygon(50% 0, 60% 35%, 100% 40%, 65% 60%, 78% 100%, 50% 75%, 22% 100%, 35% 60%, 0 40%, 40% 35%)}
-.samples__visual{position:relative;border-radius:var(--r-xl);
-  border:1px solid var(--c-line);overflow:hidden;
-  background:linear-gradient(180deg, var(--c-bg-2), var(--c-bg-1));
-  aspect-ratio:4/3;display:grid;place-items:center;padding:var(--s-5)}
-.samples__card{width:min(280px, 88%);padding:28px 22px;text-align:center;
-  border-radius:var(--r-xl);
-  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  border:1px solid var(--c-line-strong);
-  box-shadow:0 4px 16px -4px rgba(0,0,0,.5);
-  backdrop-filter:blur(14px)}
-.samples__card .eyebrow-mini{font-size:var(--t-xs);font-weight:600;
-  letter-spacing:.22em;text-transform:uppercase;color:var(--c-fg-dim);
-  margin-bottom:14px;display:block}
-.samples__card h4{font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(1.25rem,3vw,1.5rem);letter-spacing:-.02em;
-  line-height:1.15;margin-bottom:10px}
-.samples__card h4 em{font-style:italic;
-  background:linear-gradient(100deg,var(--c-rose-1),var(--c-rose-2));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  padding-right:.04em}
-.samples__card p{font-size:var(--t-sm);color:var(--c-fg-soft);margin-bottom:18px}
-.samples__card .row-mini{display:flex;gap:8px;justify-content:center}
-.samples__card .chip-yes,
-.samples__card .chip-no{padding:8px 16px;border-radius:10px;
-  font-size:.8125rem;font-weight:600}
-.samples__card .chip-yes{background:linear-gradient(180deg,var(--c-rose-2),var(--c-rose-3));
-  color:#fff;box-shadow:0 8px 20px -8px rgba(224,114,158,.6)}
-.samples__card .chip-no{border:1px solid var(--c-line-strong);color:var(--c-fg-soft)}
-
-.faq{max-width:760px;margin:var(--s-6) auto 0;display:grid;gap:1px;
-  border:1px solid var(--c-line);border-radius:var(--r-lg);
-  overflow:hidden;background:var(--c-line)}
-.faq details{background:var(--c-bg-1);transition:background var(--dur-2) var(--ease)}
-.faq details[open]{background:var(--c-bg-2)}
-.faq summary{list-style:none;display:flex;align-items:center;
-  justify-content:space-between;gap:16px;padding:18px 20px;
-  cursor:pointer;font-size:var(--t-body);font-weight:500;
-  color:var(--c-fg);user-select:none}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"";flex:0 0 auto;width:14px;height:14px;
-  background:currentColor;
-  clip-path:polygon(45% 0, 55% 0, 55% 45%, 100% 45%, 100% 55%, 55% 55%, 55% 100%, 45% 100%, 45% 55%, 0 55%, 0 45%, 45% 45%);
-  opacity:.55;transition:transform var(--dur-2) var(--ease)}
-.faq details[open] summary::after{transform:rotate(45deg)}
-.faq__body{padding:0 20px 20px;color:var(--c-fg-soft);
-  font-size:var(--t-sm);line-height:1.65;max-width:64ch}
-
-.site-foot{margin-top:var(--s-6);padding-block:var(--s-6) var(--s-5);
-  border-top:1px solid var(--c-line)}
-.foot__grid{display:grid;grid-template-columns:1.6fr repeat(3, 1fr);
-  gap:var(--s-5);margin-bottom:var(--s-6)}
-@media (max-width:48rem){.foot__grid{grid-template-columns:1fr 1fr;gap:var(--s-5)}}
-@media (max-width:28rem){.foot__grid{grid-template-columns:1fr}}
-.foot__brand .nav__brand{margin-bottom:12px}
-.foot__brand p{color:var(--c-fg-soft);font-size:var(--t-sm);
-  max-width:34ch;line-height:1.6}
-.foot__col h4{font-size:var(--t-xs);font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--c-fg-dim);margin-bottom:14px}
-.foot__col a{display:block;color:var(--c-fg-soft);font-size:var(--t-sm);
-  padding:5px 0;transition:color var(--dur-1) var(--ease)}
-.foot__col a:hover{color:var(--c-fg);text-decoration:none}
-.foot__contact{display:inline-flex;align-items:center;gap:8px;
-  padding:10px 16px;border-radius:var(--r-pill);
-  border:1px solid var(--c-line-strong);color:var(--c-fg-soft);
-  font-size:var(--t-xs);font-weight:600;letter-spacing:.04em;
-  text-transform:uppercase;transition:all var(--dur-2) var(--ease)}
-.foot__contact:hover{color:var(--c-fg);border-color:var(--c-rose-3);
-  background:rgba(224,114,158,.06);text-decoration:none}
-.foot__contact svg{width:12px;height:12px;fill:currentColor}
-.foot__base{display:flex;justify-content:space-between;align-items:center;
-  flex-wrap:wrap;gap:12px;padding-top:var(--s-4);
-  border-top:1px solid var(--c-line);color:var(--c-fg-dim);
-  font-size:var(--t-xs)}
-.foot__base p{max-width:60ch}
 
 .modal{position:fixed;inset:0;z-index:9500;display:grid;
   place-items:center;padding:20px;background:rgba(6,4,9,.88);
@@ -512,14 +579,9 @@ img,svg{display:block;max-width:100%}
 .modal__close svg{width:14px;height:14px;fill:none;stroke:currentColor;
   stroke-width:2;stroke-linecap:round}
 
-.toast{position:fixed;left:50%;bottom:24px;z-index:9800;
-  transform:translateX(-50%) translateY(14px);padding:11px 18px;
-  background:var(--c-ok);color:#062616;font-size:var(--t-sm);
-  font-weight:600;border-radius:var(--r-pill);opacity:0;pointer-events:none;
-  transition:all var(--dur-2) var(--ease);
-  box-shadow:0 10px 28px -8px rgba(79,179,131,.55)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
+/* ═════════════════════════════════════════════════════════════════
+   LETTER
+   ═════════════════════════════════════════════════════════════════ */
 .app{position:relative;z-index:1;min-height:100dvh;
   display:grid;grid-template-columns:1fr;
   padding:max(var(--gutter),env(safe-area-inset-top))
@@ -558,10 +620,8 @@ img,svg{display:block;max-width:100%}
   opacity:0;visibility:hidden;transform:translate3d(0,.75rem,0);
   transition:opacity var(--dur-3) var(--ease-out),
     transform var(--dur-3) var(--ease-out),
-    visibility 0s linear var(--dur-3);
-  will-change:opacity,transform}
-.screen.is-active{opacity:1;visibility:visible;transform:none;
-  transition-delay:0s}
+    visibility 0s linear var(--dur-3);will-change:opacity,transform}
+.screen.is-active{opacity:1;visibility:visible;transform:none;transition-delay:0s}
 .card{position:relative;width:100%;
   padding:clamp(1.75rem,4.4vw,2.5rem) clamp(1.375rem,4vw,2rem);
   border-radius:var(--r-xl);border:1px solid var(--c-line);
@@ -572,10 +632,8 @@ img,svg{display:block;max-width:100%}
   isolation:isolate;overflow:hidden}
 .card::before{content:"";position:absolute;inset:0;border-radius:inherit;
   padding:1px;background:linear-gradient(140deg,
-    rgba(224,114,158,.4) 0%,
-    rgba(255,255,255,.05) 30%,
-    transparent 55%,
-    rgba(126,80,164,.32) 100%);
+    rgba(224,114,158,.4) 0%, rgba(255,255,255,.05) 30%,
+    transparent 55%, rgba(126,80,164,.32) 100%);
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 .eyebrow{display:block;font-size:var(--t-xs);font-weight:600;
@@ -597,13 +655,10 @@ img,svg{display:block;max-width:100%}
   -webkit-background-clip:text;background-clip:text;color:transparent;
   padding-right:.04em}
 .lede{font-size:var(--t-body);line-height:1.65;color:var(--c-fg-mid);
-  max-width:34ch;margin-inline:auto;margin-bottom:var(--s-5);
-  text-wrap:pretty}
+  max-width:34ch;margin-inline:auto;margin-bottom:var(--s-5);text-wrap:pretty}
 .lede strong{color:var(--c-fg);font-weight:600}
 .fine{font-size:var(--t-sm);color:var(--c-fg-dim);
   margin-top:var(--s-4);line-height:1.5}
-.sign{margin-top:var(--s-5);font-family:var(--font-serif);
-  font-style:italic;font-size:var(--t-body);color:var(--c-fg-mid)}
 .contact{margin-top:var(--s-4);padding-top:var(--s-4);
   border-top:1px solid var(--c-line);display:flex;
   align-items:center;justify-content:center}
@@ -629,8 +684,7 @@ img,svg{display:block;max-width:100%}
     box-shadow var(--dur-2) var(--ease),
     border-color var(--dur-2) var(--ease),
     color var(--dur-2) var(--ease),
-    background var(--dur-2) var(--ease);
-  will-change:transform}
+    background var(--dur-2) var(--ease);will-change:transform}
 .btn:active{transform:scale(.97)}
 .btn--yes{flex:1 1 auto;min-width:min(100%,9rem);color:#fff;
   background:linear-gradient(180deg,var(--c-rose-2),var(--c-rose-3));
@@ -675,20 +729,19 @@ img,svg{display:block;max-width:100%}
 .btn--msgr:hover{box-shadow:0 1px 0 rgba(255,255,255,.2) inset,
   0 14px 32px -10px rgba(11,138,255,.65)}
 .btn--msgr svg{width:15px;height:15px;fill:currentColor}
-
+.forward-note{font-size:var(--t-sm);color:var(--c-fg-dim);
+  margin-top:var(--s-4);font-variant-numeric:tabular-nums}
 .share-now{display:grid;grid-template-columns:repeat(3,1fr);
   gap:8px;margin-top:var(--s-4);padding-top:var(--s-4);
   border-top:1px solid var(--c-line)}
-.share-now a,
-.share-now button{display:inline-flex;align-items:center;
+.share-now a,.share-now button{display:inline-flex;align-items:center;
   justify-content:center;gap:6px;padding:11px 8px;
   font-size:.75rem;font-weight:600;letter-spacing:.02em;
   color:var(--c-fg-mid);background:rgba(255,255,255,.02);
   border:1px solid var(--c-line);border-radius:var(--r-md);
   cursor:pointer;text-decoration:none;
   transition:all var(--dur-2) var(--ease)}
-.share-now a:hover,
-.share-now button:hover{color:var(--c-fg);
+.share-now a:hover,.share-now button:hover{color:var(--c-fg);
   border-color:var(--c-line-strong);background:rgba(255,255,255,.05);
   text-decoration:none;transform:translateY(-1px)}
 .share-now svg{width:14px;height:14px;fill:currentColor}
@@ -753,7 +806,6 @@ img,svg{display:block;max-width:100%}
   color:rgba(255,255,255,.36);font-size:var(--t-sm);opacity:0;
   transition:opacity var(--dur-3) var(--ease);pointer-events:none}
 .poweroff__safe.on{opacity:1}
-
 .boot{position:fixed;inset:0;z-index:950;display:grid;
   place-items:center;background:#000;opacity:0;visibility:hidden;
   transition:opacity var(--dur-2) var(--ease), visibility 0s linear var(--dur-2)}
@@ -771,10 +823,10 @@ img,svg{display:block;max-width:100%}
   background:#fff;border-radius:var(--r-pill)}
 .boot.on .boot__track i{animation:bootload 2.2s var(--ease-out) forwards}
 @keyframes bootload{to{width:100%}}
-
 .yt-host{position:fixed;left:-9999px;top:-9999px;
   width:1px;height:1px;opacity:0;pointer-events:none}
 
+/* small */
 @media (max-width:23.4375rem){
   :root{--gutter:.875rem;--t-display:1.5rem}
   .card{padding:1.375rem 1.0625rem;border-radius:18px}
@@ -787,13 +839,15 @@ img,svg{display:block;max-width:100%}
   .display{font-size:1.375rem;margin-bottom:.5rem}
   .lede{margin-bottom:.875rem}
   .fine{margin-top:.625rem}}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;
     animation-iteration-count:1 !important;
     transition-duration:.12s !important;
     scroll-behavior:auto !important}
   .ornament svg, .celebrate__mark, .boot__mark{animation:none !important}
-  .visual__mark path{animation:none !important;stroke-dashoffset:0 !important}}
+  .visual__mark path{animation:none !important;stroke-dashoffset:0 !important}
+  .hero__badge-dot{animation:none !important}}
 @media (prefers-contrast:more){
   :root{--c-fg-mid:#f0e8f2;--c-fg-soft:#c9bdd1;--c-fg-dim:#a89bab;
     --c-line:rgba(255,255,255,.16);--c-line-strong:rgba(255,255,255,.28)}}
@@ -809,6 +863,7 @@ img,svg{display:block;max-width:100%}
 <script>
   const OWNER_NAME     = "Bcen";
   const SITE_URL       = "https://foryou-t3zr.onrender.com/";
+  const OWNER_MM       = "https://m.me/" + "6157" + "4273" + "9849" + "05";
   const DEFAULT_CRUSH  = "you";
   const DEFAULT_MSG    = "will you be mine?";
   const DEFAULT_OPEN   = "there's something i've been meaning to say.";
@@ -824,20 +879,22 @@ img,svg{display:block;max-width:100%}
   <div class="atmos__vignette"></div>
 </div>
 
-<!-- HOMEPAGE -->
+<!-- ═══════════════════════════════════════════════════════════════
+     VIEW 1 — HOMEPAGE
+     ═══════════════════════════════════════════════════════════════ -->
 <div class="home hidden" id="view-home">
   <div class="container">
     <nav class="nav">
-      <div class="nav__brand">
+      <a href="/" class="nav__brand" style="text-decoration:none">
         <span class="nav__brand-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.4-7 11-7 11z"/></svg>
         </span>
         foryou
-      </div>
+      </a>
       <div class="nav__links">
         <a href="#how">how it works</a>
         <a href="#faq">faq</a>
-        <a href="#build" class="nav__cta">build a link</a>
+        <a href="?create=1" class="nav__cta">build a link</a>
       </div>
     </nav>
   </div>
@@ -855,238 +912,62 @@ img,svg{display:block;max-width:100%}
       fields, send the link. She opens it — the page does the rest.
     </p>
     <div class="hero__ctas">
-      <a href="#build" class="hero__cta hero__cta--primary">
+      <a href="?create=1" class="hero__cta hero__cta--primary">
         build your link
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 12h14M13 6l6 6-6 6"/>
         </svg>
       </a>
-      <a href="#how" class="hero__cta hero__cta--ghost">
-        see how it works
-      </a>
+      <a href="#how" class="hero__cta hero__cta--ghost">see how it works</a>
     </div>
-    <div class="hero__stats" aria-hidden="true">
-      <div class="hero__stat">
-        <div class="hero__stat-n">10s</div>
-        <div class="hero__stat-l">to build</div>
+    <div class="trust" aria-hidden="true">
+      <div class="trust__item">
+        <div class="trust__n">10s</div>
+        <div class="trust__l">to build</div>
       </div>
-      <div class="hero__stat">
-        <div class="hero__stat-n">1</div>
-        <div class="hero__stat-l">tap to send</div>
+      <div class="trust__item">
+        <div class="trust__n">1</div>
+        <div class="trust__l">tap to send</div>
       </div>
-      <div class="hero__stat">
-        <div class="hero__stat-n">0</div>
-        <div class="hero__stat-l">data stored</div>
+      <div class="trust__item">
+        <div class="trust__n">0</div>
+        <div class="trust__l">data stored</div>
       </div>
     </div>
   </header>
 
-  <main class="home__body">
+  <main>
     <div class="container">
-
-      <section class="section" id="build" style="padding-top:0">
-        <div class="form-card">
-          <div class="form-card__head">
-            <h2>make your link</h2>
-            <p>three fields. one tap. that's it.</p>
-          </div>
-
-          <form id="builder" autocomplete="off" novalidate>
-            <div class="field-row">
-              <div class="field" id="field-from">
-                <label for="b-from">your name</label>
-                <input id="b-from" type="text" maxlength="40" value="Bcen" required>
-                <span class="hint">signs the message</span>
-                <span class="err">add your name</span>
-              </div>
-              <div class="field" id="field-to">
-                <label for="b-to">their name</label>
-                <input id="b-to" type="text" maxlength="40" placeholder="Maria" required>
-                <span class="hint">who it's for</span>
-                <span class="err">add her name to build the link</span>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="b-fb">
-                when she says yes, take her to
-                <span class="opt">optional</span>
-              </label>
-              <div class="messenger-field">
-                <input id="b-fb" type="text" maxlength="200"
-                       placeholder="your messenger username"
-                       autocomplete="off" spellcheck="false">
-                <button type="button" class="messenger-field__toggle" id="fb-eye"
-                        aria-label="toggle messenger visibility">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                  </svg>
-                </button>
-              </div>
-              <span class="hint">she'll be forwarded to chat with you on messenger</span>
-            </div>
-
-            <div class="field">
-              <label for="b-alias">
-                custom short link
-                <span class="opt">optional</span>
-              </label>
-              <div class="alias-row">
-                <span class="alias-prefix">is.gd/</span>
-                <input id="b-alias" class="alias-input" type="text"
-                       maxlength="30" placeholder="Maria4Bcen"
-                       autocomplete="off" spellcheck="false">
-              </div>
-              <span class="alias-hint" id="alias-hint">
-                leave blank for a random link · letters, numbers, and dashes
-              </span>
-            </div>
-
-            <details class="advanced">
-              <summary>customize the message</summary>
-              <div class="advanced__body">
-                <div class="field">
-                  <label for="b-msg">the big line</label>
-                  <input id="b-msg" type="text" maxlength="80"
-                         value="will you be mine?">
-                </div>
-                <div class="field">
-                  <label for="b-open">opening line</label>
-                  <input id="b-open" type="text" maxlength="100"
-                         value="there's something i've been meaning to say.">
-                </div>
-                <div class="switch-row">
-                  <span>auto-forward after yes</span>
-                  <div class="switch on" id="sw-redirect" role="switch"
-                       aria-checked="true" tabindex="0"></div>
-                </div>
-              </div>
-            </details>
-
-            <button type="submit" class="btn-primary" id="build-btn">
-              <span class="btn-label">build my link</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                   aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6"/>
-              </svg>
-            </button>
-          </form>
-
-          <div class="out" id="out">
-            <div class="out__label">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l2-2"/>
-              </svg>
-              your link
-            </div>
-
-            <div class="out__short-preview" id="short-preview" style="display:none">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.8c.9.2 1.9.4 2.9.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2z"/>
-              </svg>
-              sending as <strong id="short-preview-text">is.gd/…</strong>
-            </div>
-
-            <div class="out__link" id="out-link" role="button" tabindex="0">
-              <div class="out__link-url loading" id="result">generating…</div>
-              <span class="out__link-hint">tap to copy</span>
-            </div>
-
-            <div class="share-row">
-              <button class="share primary" id="share-native" type="button">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
-                </svg>
-                share
-              </button>
-              <a class="share fb" id="share-fb" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12z"/>
-                </svg>
-                facebook
-              </a>
-              <button class="share msgr" id="share-msgr" type="button">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.8c.9.2 1.9.4 2.9.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2z"/>
-                </svg>
-                messenger
-              </button>
-              <button class="share tt" id="share-tt" type="button">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V7.83a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.26z"/>
-                </svg>
-                tiktok
-              </button>
-            </div>
-
-            <div class="qr-block">
-              <img class="qr-block__img" id="out-qr"
-                   alt="QR code for your link" width="168" height="168">
-              <div class="qr-block__hint">scan to open on another phone</div>
-            </div>
-
-            <div class="out__actions">
-              <button type="button" class="btn-ghost" id="copy">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="9" y="9" width="11" height="11" rx="2" fill="none"
-                        stroke="currentColor" stroke-width="2"/>
-                  <path d="M5 15V6a2 2 0 0 1 2-2h9" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                copy link
-              </button>
-              <button type="button" class="btn-ghost" id="preview-btn">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"
-                        fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="12" cy="12" r="3" fill="none"
-                          stroke="currentColor" stroke-width="2"/>
-                </svg>
-                preview
-              </button>
-              <button type="button" class="btn-ghost" id="reset">reset</button>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section class="section" id="how">
         <div class="section__head">
           <span class="section__eyebrow">how it works</span>
           <h2 class="section__title">Three steps. Ten seconds.</h2>
           <p class="section__lede">
-            Nothing to install, nothing to sign up for. Just fill the form,
-            copy the link, and send it.
+            Nothing to install, nothing to sign up for. Fill the form,
+            copy the link, send it.
           </p>
         </div>
         <div class="steps">
           <div class="step">
             <div class="step__n">1</div>
             <div class="step__title">Fill the fields</div>
-            <p class="step__body">
-              Your name, her name, and — if you want — the Messenger handle
-              she'll be forwarded to when she says yes.
-            </p>
+            <p class="step__body">Your name, her name, and — if you want —
+              the Messenger handle she'll be forwarded to when she says yes.</p>
           </div>
           <div class="step">
             <div class="step__n">2</div>
             <div class="step__title">Get the link</div>
-            <p class="step__body">
-              A short link with a custom alias, a QR code, and a share row.
-              Copy it, scan it, or share it straight into Messenger.
-            </p>
+            <p class="step__body">A short link with a custom alias, a QR
+              code, and a share row. Copy it, scan it, or share it straight
+              into Messenger.</p>
           </div>
           <div class="step">
             <div class="step__n">3</div>
             <div class="step__title">Send it</div>
-            <p class="step__body">
-              She opens the link and sees a card with her name on it. When she
-              says yes, the page does the rest.
-            </p>
+            <p class="step__body">She opens the link and sees a card with
+              her name on it. When she says yes, the page does the rest.</p>
           </div>
         </div>
       </section>
@@ -1095,10 +976,6 @@ img,svg{display:block;max-width:100%}
         <div class="section__head">
           <span class="section__eyebrow">what's inside</span>
           <h2 class="section__title">Everything the link does.</h2>
-          <p class="section__lede">
-            Each piece is designed to be one thing — a small moment that
-            builds into something worth opening.
-          </p>
         </div>
         <div class="features">
           <div class="feature">
@@ -1112,7 +989,7 @@ img,svg{display:block;max-width:100%}
             <div class="feature__icon" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
             </div>
-            <h3>Music after yes</h3>
+            <h3>Music on yes</h3>
             <p>A soft track starts the moment she says yes. Silence until then.</p>
           </div>
           <div class="feature">
@@ -1120,7 +997,7 @@ img,svg{display:block;max-width:100%}
               <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
             </div>
             <h3>The dramatic no</h3>
-            <p>No powers off the page — and the song plays the moment the reveal appears. The button keeps running.</p>
+            <p>No powers off the page — then the song plays and the button keeps dodging.</p>
           </div>
           <div class="feature">
             <div class="feature__icon" aria-hidden="true">
@@ -1148,22 +1025,73 @@ img,svg{display:block;max-width:100%}
 
       <section class="section">
         <div class="section__head">
+          <span class="section__eyebrow">before you send</span>
+          <h2 class="section__title">Four things to check.</h2>
+          <p class="section__lede">
+            The build handles the mechanics. These are the parts only you
+            can get right.
+          </p>
+        </div>
+        <div class="checklist">
+          <div class="check">
+            <div class="check__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+            </div>
+            <div class="check__body">
+              <strong>Spell her name right</strong>
+              It's on the card, in the tab title, and in the reveal. A typo
+              breaks the whole thing.
+            </div>
+          </div>
+          <div class="check">
+            <div class="check__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+            </div>
+            <div class="check__body">
+              <strong>Test the preview first</strong>
+              Open the preview in the builder. See exactly what she'll see
+              before the link goes anywhere.
+            </div>
+          </div>
+          <div class="check">
+            <div class="check__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+            </div>
+            <div class="check__body">
+              <strong>Set your Messenger handle</strong>
+              If you want her forwarded to a chat, the handle has to be
+              right. Leave it blank if you'd rather not.
+            </div>
+          </div>
+          <div class="check">
+            <div class="check__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+            </div>
+            <div class="check__body">
+              <strong>Pick the moment</strong>
+              Midnight, after a good conversation, on a specific date.
+              When she opens it matters as much as what's inside.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section__head">
           <span class="section__eyebrow">what she sees</span>
           <h2 class="section__title">A card. Her name. Two buttons.</h2>
         </div>
         <div class="samples">
           <div class="samples__copy">
             <h3>No form on her end. No account. No decisions to make.</h3>
-            <p>
-              She opens the link and the page loads a single card with her name
-              on it. Two buttons. One is yes. The other keeps running.
-            </p>
+            <p>She opens the link and the page loads a single card with her
+              name on it. Two buttons. One is yes. The other keeps running.</p>
             <ul class="samples__list">
               <li>Personalized headline with her name</li>
               <li>Opening line you write in the builder</li>
               <li>Music that starts when she says yes</li>
               <li>Yes forwards her straight to your chat</li>
-              <li>No triggers a fake power-off, then the song plays and the button keeps dodging</li>
+              <li>No triggers a fake power-off — song plays, button dodges</li>
               <li>Contact the owner chip on every screen</li>
             </ul>
           </div>
@@ -1189,73 +1117,64 @@ img,svg{display:block;max-width:100%}
         <div class="faq">
           <details>
             <summary>Does she need to download anything?</summary>
-            <div class="faq__body">
-              No. The link opens in any browser — phone or desktop. Nothing to
-              install, no app, no permission prompts.
-            </div>
+            <div class="faq__body">No. The link opens in any browser — phone
+              or desktop. Nothing to install, no app, no permission prompts.</div>
           </details>
           <details>
             <summary>Is any of this stored anywhere?</summary>
-            <div class="faq__body">
-              No. Everything is client-side. The only third party in the chain
-              is the link shortener (is.gd, TinyURL, or spoo.me) which sees the
-              long link long enough to shorten it. Nothing about her, or about
-              you, is stored on any server.
-            </div>
+            <div class="faq__body">No. Everything is client-side. The only
+              third party in the chain is the link shortener (is.gd, TinyURL,
+              or spoo.me) which sees the long link long enough to shorten it.</div>
           </details>
           <details>
             <summary>Can she tell it's from me?</summary>
-            <div class="faq__body">
-              Yes — your name signs the reveal card, and if you set a Messenger
-              handle, the contact chip and the yes-button point to your chat.
-              The page is deliberately not anonymous.
-            </div>
+            <div class="faq__body">Yes — your name signs the reveal card, and
+              if you set a Messenger handle, the contact chip and the yes-button
+              point to your chat. The page is deliberately not anonymous.</div>
           </details>
           <details>
             <summary>When does the music play?</summary>
-            <div class="faq__body">
-              If she taps yes, the song starts immediately. If she taps no, the
-              prank plays in silence, then the song starts the moment the
-              reveal card appears. Either way, she hears the song by the end.
-            </div>
+            <div class="faq__body">If she taps yes, the song starts
+              immediately. If she taps no, the prank plays in silence, then the
+              song starts the moment the reveal card appears.</div>
           </details>
           <details>
             <summary>What happens when she taps no?</summary>
-            <div class="faq__body">
-              The page plays a fake power-off sequence — a black screen, a
-              slide-to-power-off slider, a low-battery frame, then a boot
-              animation. Then the reveal card appears, the song starts, and the
-              no button dodges forever. She can chase it as long as she wants.
-              The only way forward is yes.
-            </div>
-          </details>
-          <details>
-            <summary>What if she opens it in a chat preview?</summary>
-            <div class="faq__body">
-              The preview card shows the static og tags — a generic title and
-              description. Her name only appears once she actually opens the
-              page. This is a browser limitation: preview crawlers don't run
-              JavaScript, so they can't see the personalized version.
-            </div>
+            <div class="faq__body">Fake power-off sequence — black screen,
+              slide-to-power-off slider, low-battery frame, boot animation.
+              Then the reveal card appears, the song starts, and the no button
+              dodges forever.</div>
           </details>
           <details>
             <summary>Can I use a custom short link?</summary>
-            <div class="faq__body">
-              Yes. Type an alias in the "custom short link" field and the
-              builder will try to reserve it on is.gd, then TinyURL, then
-              spoo.me. If it's taken, the builder falls back to a random link
-              and tells you.
-            </div>
+            <div class="faq__body">Yes. Type an alias in the builder and it
+              tries to reserve it on is.gd, then TinyURL, then spoo.me. If
+              taken, it falls back to a random link.</div>
+          </details>
+          <details>
+            <summary>What if she says no for real?</summary>
+            <div class="faq__body">The no button dodges forever. She can chase
+              it as long as she wants. The only way forward is yes.</div>
           </details>
           <details>
             <summary>After she says yes?</summary>
-            <div class="faq__body">
-              The song starts, the celebration screen appears, and she can
-              share the page back to you on Messenger, Facebook, or TikTok.
-              That's the moment the page was built for.
-            </div>
+            <div class="faq__body">The song starts, the celebration screen
+              appears, and she can share the page back to you on Messenger,
+              Facebook, or TikTok.</div>
           </details>
         </div>
+      </section>
+
+      <section class="cta-band">
+        <h3>Ready to build yours?</h3>
+        <p>Three fields. One tap. Ten seconds.</p>
+        <a href="?create=1" class="hero__cta hero__cta--primary">
+          build a link
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6"/>
+          </svg>
+        </a>
       </section>
 
       <footer class="site-foot">
@@ -1267,14 +1186,12 @@ img,svg{display:block;max-width:100%}
               </span>
               foryou
             </div>
-            <p>
-              A small tool for saying the thing that's hard to say out loud.
-              Built to be sent once, to one person.
-            </p>
+            <p>A small tool for saying the thing that's hard to say out loud.
+              Built to be sent once, to one person.</p>
           </div>
           <div class="foot__col">
-            <h4>build</h4>
-            <a href="#build">make a link</a>
+            <h4>product</h4>
+            <a href="?create=1">make a link</a>
             <a href="#how">how it works</a>
             <a href="#faq">questions</a>
           </div>
@@ -1285,7 +1202,7 @@ img,svg{display:block;max-width:100%}
           </div>
           <div class="foot__col">
             <h4>contact</h4>
-            <a href="#" id="foot-contact" class="foot__contact" target="_blank" rel="noopener">
+            <a href="https://m.me/61574273984905" class="foot__contact" target="_blank" rel="noopener">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.8c.9.2 1.9.4 2.9.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2z"/>
               </svg>
@@ -1303,8 +1220,206 @@ img,svg{display:block;max-width:100%}
   </main>
 </div>
 
-<!-- CONFESSION -->
-<div class="app hidden" id="view-confession">
+<!-- ═══════════════════════════════════════════════════════════════
+     VIEW 2 — CREATE
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="page hidden" id="view-create">
+  <div class="container">
+    <nav class="nav">
+      <a href="./" class="nav__brand" style="text-decoration:none">
+        <span class="nav__brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.4-7 11-7 11z"/></svg>
+        </span>
+        foryou
+      </a>
+      <div class="nav__links">
+        <a href="./">home</a>
+        <a href="./#faq">faq</a>
+      </div>
+    </nav>
+  </div>
+
+  <header class="page__head container">
+    <span class="page__eyebrow">make a link</span>
+    <h1 class="page__title">Three fields. Ten seconds.</h1>
+    <p class="page__lede">Fill the form, tap build, copy the short link.
+      That's the whole job.</p>
+  </header>
+
+  <main class="page__body">
+    <div class="container">
+      <div class="form-card">
+        <form id="builder" autocomplete="off" novalidate>
+          <div class="field-row">
+            <div class="field" id="field-from">
+              <label for="b-from">your name</label>
+              <input id="b-from" type="text" maxlength="40" value="Bcen" required>
+              <span class="hint">signs the message</span>
+              <span class="err">add your name</span>
+            </div>
+            <div class="field" id="field-to">
+              <label for="b-to">their name</label>
+              <input id="b-to" type="text" maxlength="40" placeholder="Maria" required>
+              <span class="hint">who it's for</span>
+              <span class="err">add her name to build the link</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="b-fb">when she says yes, take her to
+              <span class="opt">optional</span></label>
+            <div class="messenger-field">
+              <input id="b-fb" type="text" maxlength="200"
+                     placeholder="your messenger username"
+                     autocomplete="off" spellcheck="false">
+              <button type="button" class="messenger-field__toggle" id="fb-eye"
+                      aria-label="toggle messenger visibility">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+            <span class="hint">she'll be forwarded to chat with you on messenger</span>
+          </div>
+
+          <div class="field">
+            <label for="b-alias">custom short link
+              <span class="opt">optional</span></label>
+            <div class="alias-row">
+              <span class="alias-prefix">is.gd/</span>
+              <input id="b-alias" class="alias-input" type="text"
+                     maxlength="30" placeholder="Maria4Bcen"
+                     autocomplete="off" spellcheck="false">
+            </div>
+            <span class="alias-hint" id="alias-hint">
+              leave blank for a random link · letters, numbers, and dashes
+            </span>
+          </div>
+
+          <details class="advanced">
+            <summary>customize the message</summary>
+            <div class="advanced__body">
+              <div class="field">
+                <label for="b-msg">the big line</label>
+                <input id="b-msg" type="text" maxlength="80"
+                       value="will you be mine?">
+              </div>
+              <div class="field">
+                <label for="b-open">opening line</label>
+                <input id="b-open" type="text" maxlength="100"
+                       value="there's something i've been meaning to say.">
+              </div>
+              <div class="switch-row">
+                <span>auto-forward after yes</span>
+                <div class="switch on" id="sw-redirect" role="switch"
+                     aria-checked="true" tabindex="0"></div>
+              </div>
+            </div>
+          </details>
+
+          <button type="submit" class="btn-primary" id="build-btn" style="margin-top:var(--s-5)">
+            <span class="btn-label">build my link</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="out" id="out">
+          <div class="out__label">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l2-2"/>
+            </svg>
+            your link
+          </div>
+
+          <div class="out__short-preview" id="short-preview" style="display:none">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.8c.9.2 1.9.4 2.9.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2z"/>
+            </svg>
+            sending as <strong id="short-preview-text">is.gd/…</strong>
+          </div>
+
+          <div class="out__link" id="out-link" role="button" tabindex="0">
+            <div class="out__link-url loading" id="result">generating…</div>
+            <span class="out__link-hint">tap to copy</span>
+          </div>
+
+          <div class="share-row">
+            <button class="share primary" id="share-native" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
+              </svg>
+              share
+            </button>
+            <a class="share fb" id="share-fb" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.77l-.44 2.89h-2.33v6.99A10 10 0 0 0 22 12z"/>
+              </svg>
+              facebook
+            </a>
+            <button class="share msgr" id="share-msgr" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.8c.9.2 1.9.4 2.9.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2z"/>
+              </svg>
+              messenger
+            </button>
+            <button class="share tt" id="share-tt" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V7.83a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.26z"/>
+              </svg>
+              tiktok
+            </button>
+          </div>
+
+          <div class="qr-block">
+            <img class="qr-block__img" id="out-qr"
+                 alt="QR code for your link" width="168" height="168">
+            <div class="qr-block__hint">scan to open on another phone</div>
+          </div>
+
+          <div class="out__actions">
+            <button type="button" class="btn-ghost" id="copy">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="9" y="9" width="11" height="11" rx="2" fill="none"
+                      stroke="currentColor" stroke-width="2"/>
+                <path d="M5 15V6a2 2 0 0 1 2-2h9" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              copy link
+            </button>
+            <button type="button" class="btn-ghost" id="preview-btn">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"
+                      fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="3" fill="none"
+                        stroke="currentColor" stroke-width="2"/>
+              </svg>
+              preview
+            </button>
+            <button type="button" class="btn-ghost" id="reset">reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="container">
+    <div class="foot__base" style="border:0;padding-top:0;margin-bottom:var(--s-5)">
+      <p>Nothing is stored. No server. The link is built in your browser.</p>
+      <p id="foot-year-create"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     VIEW 3 — LETTER
+     ═══════════════════════════════════════════════════════════════ -->
+<div class="app hidden" id="view-letter">
   <div class="app__visual">
     <div class="visual">
       <svg class="visual__mark" viewBox="0 0 100 100" aria-hidden="true">
@@ -1326,9 +1441,7 @@ img,svg{display:block;max-width:100%}
         <div class="ornament" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.4-7 11-7 11z"/></svg>
         </div>
-        <h1 class="display" id="ask-h">
-          Hey, <em><span data-crush></span></em>.
-        </h1>
+        <h1 class="display" id="ask-h">Hey, <em><span data-crush></span></em>.</h1>
         <p class="lede" data-opening></p>
         <div class="actions">
           <button class="btn btn--yes" id="yes-1" type="button">Yes</button>
@@ -1352,9 +1465,7 @@ img,svg{display:block;max-width:100%}
           <svg viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
         </div>
         <h1 class="celebrate__title">Yes.</h1>
-        <p class="lede">
-          You have no idea how long I've been waiting to hear that.
-        </p>
+        <p class="lede">You have no idea how long I've been waiting to hear that.</p>
         <button class="btn btn--msgr hidden" id="forward-now" type="button">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 2C6.5 2 2 6.1 2 11.2c0 2.9 1.4 5.5 3.7 7.2V22l3.4-1.8c.9.2 1.9.4 2.9.4 5.5 0 10-4.1 10-9.2S17.5 2 12 2z"/>
@@ -1362,7 +1473,6 @@ img,svg{display:block;max-width:100%}
           Chat in messenger
         </button>
         <p class="forward-note" id="forward-note"></p>
-
         <div class="share-now">
           <a class="fb" id="share-c-fb" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -1383,7 +1493,6 @@ img,svg{display:block;max-width:100%}
             tiktok
           </button>
         </div>
-
         <div class="contact">
           <a href="#" id="contact-link-2" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -1402,16 +1511,12 @@ img,svg{display:block;max-width:100%}
           <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.4-7 11-7 11z"/></svg>
         </div>
         <h1 class="display" id="reveal-h">But I had to try.</h1>
-        <p class="lede">
-          The truth is — <strong data-confession></strong>
-        </p>
+        <p class="lede">The truth is — <strong data-confession></strong></p>
         <div class="actions">
           <button class="btn btn--yes" id="yes-2" type="button">Okay, yes</button>
           <button class="btn btn--no" id="no-2" type="button">No</button>
         </div>
-        <p class="fine" id="reveal-fine">
-          The no button is a coward. Try to catch it — it never stops.
-        </p>
+        <p class="fine" id="reveal-fine">The no button is a coward. Try to catch it — it never stops.</p>
         <div class="contact">
           <a href="#" id="contact-link-3" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -1432,10 +1537,7 @@ img,svg{display:block;max-width:100%}
     <div class="poweroff__track">
       <div class="poweroff__fill" id="po-fill"></div>
       <div class="poweroff__knob" id="po-knob" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2v10"/>
-          <path d="M18.4 6.6a9 9 0 1 1-12.8 0"/>
-        </svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>
       </div>
     </div>
     <p class="poweroff__hint">or press a side button to cancel</p>
@@ -1484,17 +1586,30 @@ img,svg{display:block;max-width:100%}
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const hoverable    = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+  /* ═══════════════════════════════════════════════════════════
+     ROUTER
+     ?to=…       → letter
+     ?create=1   → builder
+     otherwise   → homepage
+     ═══════════════════════════════════════════════════════════ */
   const HAS_TARGET = !!params.get("to");
-  const IS_HOME    = !HAS_TARGET;
+  const IS_CREATE  = params.get("create") === "1";
+  const IS_HOME    = !HAS_TARGET && !IS_CREATE;
 
   if (IS_HOME){
     document.body.classList.add("view-home");
     $("#view-home").classList.remove("hidden");
+  } else if (IS_CREATE){
+    document.body.classList.add("view-create");
+    $("#view-create").classList.remove("hidden");
   } else {
-    document.body.classList.add("view-confession");
-    $("#view-confession").classList.remove("hidden");
+    document.body.classList.add("view-letter");
+    $("#view-letter").classList.remove("hidden");
   }
 
+  /* ═══════════════════════════════════════════════════════════
+     SHARED
+     ═══════════════════════════════════════════════════════════ */
   function buzz(p){ try { if (navigator.vibrate) navigator.vibrate(p); } catch(_){} }
 
   async function copyText(text){
@@ -1504,8 +1619,7 @@ img,svg{display:block;max-width:100%}
       try {
         const ta = document.createElement("textarea");
         ta.value = text;
-        ta.style.position = "fixed";
-        ta.style.opacity = "0";
+        ta.style.position = "fixed"; ta.style.opacity = "0";
         document.body.appendChild(ta);
         ta.select();
         document.execCommand("copy");
@@ -1534,114 +1648,22 @@ img,svg{display:block;max-width:100%}
     return "https://m.me/" + s;
   }
 
-  const _mk1 = "https://m" + ".me/";
-  const _mk2 = "6157" + "4273" + "9849" + "05";
-  const OWNER_MM = _mk1 + _mk2;
+  /* foot year */
+  const fy1 = $("#foot-year");
+  if (fy1) fy1.textContent = `built for someone · ${new Date().getFullYear()}`;
+  const fy2 = $("#foot-year-create");
+  if (fy2) fy2.textContent = `built for someone · ${new Date().getFullYear()}`;
 
   /* ═══════════════════════════════════════════════════════════
-     YOUTUBE — silent until yes, or until the no-prank finishes
+     VIEW 2 — CREATE
      ═══════════════════════════════════════════════════════════ */
-  let yt = null, ytReady = false, ytRequested = false;
-  let pendingMusicStart = false;
-  const YT_API_SRC = "https://www.youtube.com/iframe_api";
-
-  function loadYouTubeAPI(cb){
-    if (window.YT && window.YT.Player){ cb(); return; }
-    const prev = window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady = () => {
-      if (typeof prev === "function") prev();
-      cb();
-    };
-    if (!document.querySelector(`script[src="${YT_API_SRC}"]`)){
-      const s = document.createElement("script");
-      s.src = YT_API_SRC;
-      s.async = true;
-      document.head.appendChild(s);
-    }
-  }
-
-  /* YES path — full unmuted playback on the tap gesture */
-  function playMusicOnce(){
-    if (ytRequested) return;
-    ytRequested = true;
-    loadYouTubeAPI(() => {
-      yt = new YT.Player("yt-host", {
-        height:"1", width:"1", videoId: YT_VIDEO_ID,
-        playerVars:{
-          autoplay: 0, mute: 1, controls: 0, disablekb: 1,
-          modestbranding: 1, playsinline: 1, rel: 0,
-          loop: 1, playlist: YT_VIDEO_ID, origin: location.origin,
-          iv_load_policy: 3, fs: 0, cc_load_policy: 0
-        },
-        events:{
-          onReady(e){
-            ytReady = true;
-            try {
-              e.target.unMute();
-              e.target.setVolume(65);
-              e.target.playVideo();
-            } catch(_){}
-          }
-        }
-      });
-    });
-  }
-
-  /* NO path — silently arm the player, then start on reveal */
-  function prepareMusicForLater(){
-    if (ytRequested) return;
-    ytRequested = true;
-    loadYouTubeAPI(() => {
-      yt = new YT.Player("yt-host", {
-        height:"1", width:"1", videoId: YT_VIDEO_ID,
-        playerVars:{
-          autoplay: 0, mute: 1, controls: 0, disablekb: 1,
-          modestbranding: 1, playsinline: 1, rel: 0,
-          loop: 1, playlist: YT_VIDEO_ID, origin: location.origin,
-          iv_load_policy: 3, fs: 0, cc_load_policy: 0
-        },
-        events:{
-          onReady(e){
-            ytReady = true;
-            /* silent activation tick — arms the player so unmute works later */
-            try {
-              e.target.mute();
-              e.target.playVideo();
-              setTimeout(() => {
-                try { e.target.pauseVideo(); e.target.seekTo(0); } catch(_){}
-              }, 120);
-            } catch(_){}
-            if (pendingMusicStart) startMusicNow();
-          }
-        }
-      });
-    });
-  }
-
-  function startMusicNow(){
-    if (!ytReady || !yt){
-      pendingMusicStart = true;
-      return;
-    }
-    pendingMusicStart = false;
-    try {
-      yt.seekTo(0);
-      yt.playVideo();
-      yt.unMute();
-      yt.setVolume(65);
-    } catch(_){}
-  }
-
-  /* ═══════════════════════════════════════════════════════════
-     HOMEPAGE
-     ═══════════════════════════════════════════════════════════ */
-  if (IS_HOME){
+  if (IS_CREATE){
 
     const CACHE_KEY = "foryou.shortlinks";
     const CACHE_TTL = 1000 * 60 * 60 * 24 * 30;
     const ALIAS_RE  = /^[a-zA-Z0-9_-]{3,30}$/;
 
-    function readCache(){
+    const readCache = () => {
       try {
         const raw = localStorage.getItem(CACHE_KEY);
         if (!raw) return {};
@@ -1652,19 +1674,10 @@ img,svg{display:block;max-width:100%}
         }
         return data;
       } catch(_){ return {}; }
-    }
-    function writeCache(obj){
-      try { localStorage.setItem(CACHE_KEY, JSON.stringify(obj)); } catch(_){}
-    }
-    function cacheGet(key){
-      const c = readCache();
-      return c[key] ? c[key].s : null;
-    }
-    function cacheSet(key, shortUrl){
-      const c = readCache();
-      c[key] = { s: shortUrl, t: Date.now() };
-      writeCache(c);
-    }
+    };
+    const writeCache = o => { try { localStorage.setItem(CACHE_KEY, JSON.stringify(o)); } catch(_){} };
+    const cacheGet = k => { const c = readCache(); return c[k] ? c[k].s : null; };
+    const cacheSet = (k, u) => { const c = readCache(); c[k] = { s: u, t: Date.now() }; writeCache(c); };
 
     async function isgdCreate(longUrl, alias){
       const enc = encodeURIComponent(longUrl);
@@ -1674,8 +1687,7 @@ img,svg{display:block;max-width:100%}
         const r = await fetch(url, { mode:"cors" });
         if (!r.ok) return null;
         const t = (await r.text()).trim();
-        if (t.startsWith("http")) return t;
-        return null;
+        return t.startsWith("http") ? t : null;
       } catch(_){ return null; }
     }
     async function tinyurlCreate(longUrl, alias){
@@ -1686,8 +1698,7 @@ img,svg{display:block;max-width:100%}
         const r = await fetch(url, { mode:"cors" });
         if (!r.ok) return null;
         const t = (await r.text()).trim();
-        if (t.startsWith("http")) return t;
-        return null;
+        return t.startsWith("http") ? t : null;
       } catch(_){ return null; }
     }
     async function spooCreate(longUrl, alias){
@@ -1702,19 +1713,14 @@ img,svg{display:block;max-width:100%}
         });
         if (!r.ok) return null;
         const j = await r.json();
-        if (j && j.short_url) return j.short_url;
-        return null;
+        return (j && j.short_url) ? j.short_url : null;
       } catch(_){ return null; }
     }
-
     async function shorten(longUrl, alias){
       const cacheKey = longUrl + (alias ? "|" + alias : "");
       const cached = cacheGet(cacheKey);
       if (cached) return { url: cached, cached: true };
-
-      let short = null;
-      let usedAlias = !!alias;
-
+      let short = null, usedAlias = !!alias;
       if (alias){
         short = await isgdCreate(longUrl, alias);
         if (!short) short = await tinyurlCreate(longUrl, alias);
@@ -1730,14 +1736,11 @@ img,svg{display:block;max-width:100%}
         if (!short) short = await tinyurlCreate(longUrl);
         if (!short) short = await spooCreate(longUrl);
       }
-
       if (!short) return { url: longUrl, cached:false, aliasRejected: !!alias };
       cacheSet(cacheKey, short);
-      return {
-        url: short, cached: false,
+      return { url: short, cached:false,
         aliasRejected: !!alias && !usedAlias,
-        aliasUsed: usedAlias ? alias : null
-      };
+        aliasUsed: usedAlias ? alias : null };
     }
 
     const fbInput    = $("#b-fb");
@@ -1760,11 +1763,6 @@ img,svg{display:block;max-width:100%}
     const buildLabel = $(".btn-label");
     const shortPreview     = $("#short-preview");
     const shortPreviewText = $("#short-preview-text");
-
-    const footContact = $("#foot-contact");
-    if (footContact) footContact.href = OWNER_MM;
-    const footYear = $("#foot-year");
-    if (footYear) footYear.textContent = `built for someone · ${new Date().getFullYear()}`;
 
     fbInput.dataset.real = OWNER_MM;
     function maskFb(){
@@ -1790,14 +1788,12 @@ img,svg{display:block;max-width:100%}
     });
     fbInput.addEventListener("blur", () => {
       const v = fbInput.value.trim();
-      if (v && !fbInput.classList.contains("is-masked")){
-        fbInput.dataset.real = v;
-      }
+      if (v && !fbInput.classList.contains("is-masked")) fbInput.dataset.real = v;
       if (fbInput.dataset.real) maskFb();
     });
     maskFb();
 
-    function bindSwitch(id){
+    const bindSwitch = id => {
       const el = document.getElementById(id);
       if (!el) return;
       const flip = () => {
@@ -1808,13 +1804,13 @@ img,svg{display:block;max-width:100%}
       el.addEventListener("keydown", e => {
         if (e.key === "Enter" || e.key === " "){ e.preventDefault(); flip(); }
       });
-    }
+    };
     bindSwitch("sw-redirect");
 
-    function flagErr(fieldId, on){
-      const el = document.getElementById(fieldId);
+    const flagErr = (id, on) => {
+      const el = document.getElementById(id);
       if (el) el.classList.toggle("has-err", on);
-    }
+    };
     fromEl.addEventListener("input", () => flagErr("field-from", false));
     toEl.addEventListener("input",   () => flagErr("field-to", false));
 
@@ -1851,25 +1847,19 @@ img,svg{display:block;max-width:100%}
 
       const fb = normalizeMessenger(fbRaw);
       if (fb) p.set("fb", fb);
-
       if (!toSw.classList.contains("on")) p.set("nore", "1");
 
       const base = SITE_URL.endsWith("/") ? SITE_URL : SITE_URL + "/";
       return base + "?" + p.toString();
     }
 
-    function qrSrc(target){
-      return `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${encodeURIComponent(target)}`;
-    }
+    const qrSrc = t => `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${encodeURIComponent(t)}`;
 
-    let currentLong = "";
-    let currentShort = "";
-    let building = false;
+    let currentLong = "", currentShort = "", building = false;
 
-    $("#builder").addEventListener("submit", async (e) => {
+    $("#builder").addEventListener("submit", async e => {
       e.preventDefault();
       if (building) return;
-
       const fromOk = !!fromEl.value.trim();
       const toOk   = !!toEl.value.trim();
       flagErr("field-from", !fromOk);
@@ -1887,7 +1877,6 @@ img,svg{display:block;max-width:100%}
       resEl.textContent = "generating short link…";
       resEl.classList.remove("is-cached");
       resEl.classList.add("loading");
-
       if (shortPreview){
         shortPreview.style.display = alias ? "flex" : "none";
         if (alias) shortPreviewText.textContent = `is.gd/${alias}`;
@@ -1945,13 +1934,11 @@ img,svg{display:block;max-width:100%}
       modal.classList.remove("show");
       setTimeout(() => { iframe.src = "about:blank"; }, 320);
     }
-    iframe.addEventListener("load", () => {
-      if (previewLoad) previewLoad.classList.add("hidden");
-    });
+    iframe.addEventListener("load", () => previewLoad && previewLoad.classList.add("hidden"));
     $("#preview-btn").addEventListener("click", openPreview);
     $("#preview-close").addEventListener("click", closePreview);
-    modal.addEventListener("click", (e) => { if (e.target === modal) closePreview(); });
-    document.addEventListener("keydown", (e) => {
+    modal.addEventListener("click", e => { if (e.target === modal) closePreview(); });
+    document.addEventListener("keydown", e => {
       if (e.key === "Escape" && modal.classList.contains("show")) closePreview();
     });
 
@@ -1961,11 +1948,8 @@ img,svg{display:block;max-width:100%}
       if (navigator.share){
         try { await navigator.share({ title:"foryou", text:"open this.", url }); }
         catch(_){}
-      } else {
-        if (await copyText(url)) toast("copied — paste anywhere");
-      }
+      } else if (await copyText(url)) toast("copied — paste anywhere");
     });
-
     $("#share-msgr").addEventListener("click", async () => {
       const url = currentShort || currentLong;
       if (!url) return;
@@ -1983,7 +1967,6 @@ img,svg{display:block;max-width:100%}
         toast("link copied — open messenger and paste");
       }
     });
-
     $("#share-tt").addEventListener("click", async () => {
       const url = currentShort || currentLong;
       if (!url) return;
@@ -1999,8 +1982,7 @@ img,svg{display:block;max-width:100%}
       msgEl.value  = DEFAULT_MSG;
       openEl.value = DEFAULT_OPEN;
       outEl.classList.remove("show");
-      currentShort = "";
-      currentLong  = "";
+      currentShort = ""; currentLong = "";
       qrEl.removeAttribute("src");
       if (shortPreview) shortPreview.style.display = "none";
       aliasHint.className = "alias-hint";
@@ -2013,12 +1995,91 @@ img,svg{display:block;max-width:100%}
       flagErr("field-to", false);
     });
 
+    return; /* create done */
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     VIEW 1 — HOMEPAGE (nothing to wire, hrefs are anchors)
+     ═══════════════════════════════════════════════════════════ */
+  if (IS_HOME){
     return;
   }
 
   /* ═══════════════════════════════════════════════════════════
-     CONFESSION
+     VIEW 3 — LETTER
      ═══════════════════════════════════════════════════════════ */
+  let yt = null, ytReady = false, ytRequested = false, pendingMusicStart = false;
+  const YT_API_SRC = "https://www.youtube.com/iframe_api";
+
+  function loadYouTubeAPI(cb){
+    if (window.YT && window.YT.Player){ cb(); return; }
+    const prev = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (typeof prev === "function") prev();
+      cb();
+    };
+    if (!document.querySelector(`script[src="${YT_API_SRC}"]`)){
+      const s = document.createElement("script");
+      s.src = YT_API_SRC; s.async = true;
+      document.head.appendChild(s);
+    }
+  }
+
+  function playMusicOnce(){
+    if (ytRequested) return;
+    ytRequested = true;
+    loadYouTubeAPI(() => {
+      yt = new YT.Player("yt-host", {
+        height:"1", width:"1", videoId: YT_VIDEO_ID,
+        playerVars:{ autoplay:0, mute:1, controls:0, disablekb:1,
+          modestbranding:1, playsinline:1, rel:0, loop:1,
+          playlist:YT_VIDEO_ID, origin:location.origin,
+          iv_load_policy:3, fs:0, cc_load_policy:0 },
+        events:{
+          onReady(e){
+            ytReady = true;
+            try { e.target.unMute(); e.target.setVolume(65); e.target.playVideo(); }
+            catch(_){}
+          }
+        }
+      });
+    });
+  }
+
+  function prepareMusicForLater(){
+    if (ytRequested) return;
+    ytRequested = true;
+    loadYouTubeAPI(() => {
+      yt = new YT.Player("yt-host", {
+        height:"1", width:"1", videoId: YT_VIDEO_ID,
+        playerVars:{ autoplay:0, mute:1, controls:0, disablekb:1,
+          modestbranding:1, playsinline:1, rel:0, loop:1,
+          playlist:YT_VIDEO_ID, origin:location.origin,
+          iv_load_policy:3, fs:0, cc_load_policy:0 },
+        events:{
+          onReady(e){
+            ytReady = true;
+            try {
+              e.target.mute(); e.target.playVideo();
+              setTimeout(() => {
+                try { e.target.pauseVideo(); e.target.seekTo(0); } catch(_){}
+              }, 120);
+            } catch(_){}
+            if (pendingMusicStart) startMusicNow();
+          }
+        }
+      });
+    });
+  }
+
+  function startMusicNow(){
+    if (!ytReady || !yt){ pendingMusicStart = true; return; }
+    pendingMusicStart = false;
+    try {
+      yt.seekTo(0); yt.playVideo(); yt.unMute(); yt.setVolume(65);
+    } catch(_){}
+  }
+
   const CRUSH_NAME  = (params.get("to")      || DEFAULT_CRUSH).slice(0, 40);
   const FROM_NAME   = (params.get("from")    || OWNER_NAME).slice(0, 40);
   const MESSAGE     = (params.get("msg")     || DEFAULT_MSG).slice(0, 120);
@@ -2026,11 +2087,11 @@ img,svg{display:block;max-width:100%}
   const FB_TARGET   =  params.get("fb")      || OWNER_MM;
   const NO_REDIRECT =  params.get("nore")    === "1";
 
-  $$("[data-crush]").forEach(el     => el.textContent = CRUSH_NAME);
-  $$("[data-you]").forEach(el       => el.textContent = FROM_NAME);
-  $$("[data-confession]").forEach(el=> el.textContent = MESSAGE);
-  $$("[data-opening]").forEach(el   => el.textContent = OPENING_TX);
-  $$("[data-quote]").forEach(el     => el.textContent = QUOTE);
+  $$("[data-crush]").forEach(el => el.textContent = CRUSH_NAME);
+  $$("[data-you]").forEach(el => el.textContent = FROM_NAME);
+  $$("[data-confession]").forEach(el => el.textContent = MESSAGE);
+  $$("[data-opening]").forEach(el => el.textContent = OPENING_TX);
+  $$("[data-quote]").forEach(el => el.textContent = QUOTE);
   document.title = `Hey ${CRUSH_NAME} — something for you`;
 
   ["contact-link-1","contact-link-2","contact-link-3"].forEach(id => {
@@ -2038,53 +2099,37 @@ img,svg{display:block;max-width:100%}
     if (el) el.href = FB_TARGET;
   });
 
-  const fwdBtn  = $("#forward-now");
-  const fwdNote = $("#forward-note");
-  if (FB_TARGET){
-    fwdBtn.classList.remove("hidden");
-  } else {
-    fwdBtn.classList.add("hidden");
-    if (fwdNote) fwdNote.style.display = "none";
-  }
+  const fwdBtn = $("#forward-now"), fwdNote = $("#forward-note");
+  if (FB_TARGET) fwdBtn.classList.remove("hidden");
+  else { fwdBtn.classList.add("hidden"); if (fwdNote) fwdNote.style.display = "none"; }
 
   const pageUrl = location.href;
   const shareCFb = $("#share-c-fb");
-  if (shareCFb){
-    shareCFb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`;
-  }
+  if (shareCFb) shareCFb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`;
   const shareCMsgr = $("#share-c-msgr");
-  if (shareCMsgr){
-    shareCMsgr.addEventListener("click", async () => {
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isMobile){
-        location.href = `fb-messenger://share/?link=${encodeURIComponent(pageUrl)}`;
-        setTimeout(async () => {
-          if (document.visibilityState === "visible"){
-            await copyText(pageUrl);
-            toast("link copied — open messenger and paste");
-          }
-        }, 1200);
-      } else {
-        await copyText(pageUrl);
-        toast("link copied — open messenger and paste");
-      }
-    });
-  }
+  if (shareCMsgr) shareCMsgr.addEventListener("click", async () => {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile){
+      location.href = `fb-messenger://share/?link=${encodeURIComponent(pageUrl)}`;
+      setTimeout(async () => {
+        if (document.visibilityState === "visible"){
+          await copyText(pageUrl); toast("link copied — open messenger and paste");
+        }
+      }, 1200);
+    } else {
+      await copyText(pageUrl); toast("link copied — open messenger and paste");
+    }
+  });
   const shareCTt = $("#share-c-tt");
-  if (shareCTt){
-    shareCTt.addEventListener("click", async () => {
-      await copyText(pageUrl);
-      toast("link copied — paste in TikTok bio or DM");
-    });
-  }
+  if (shareCTt) shareCTt.addEventListener("click", async () => {
+    await copyText(pageUrl); toast("link copied — paste in TikTok bio or DM");
+  });
 
   let current = $("#s-ask");
   function show(next){
     if (!next || next === current) return;
     current.classList.remove("is-active");
-    requestAnimationFrame(() => {
-      setTimeout(() => next.classList.add("is-active"), 30);
-    });
+    requestAnimationFrame(() => setTimeout(() => next.classList.add("is-active"), 30));
     current = next;
     next.scrollIntoView({ block:"nearest" });
   }
@@ -2112,21 +2157,18 @@ img,svg{display:block;max-width:100%}
   if (!reduceMotion && hoverable){
     let raf = 0, tx = 0, ty = 0;
     const heart = $(".ornament svg");
-    if (heart){
-      window.addEventListener("pointermove", e => {
-        const r = heart.getBoundingClientRect();
-        const cx = r.left + r.width / 2;
-        const cy = r.top + r.height / 2;
-        tx = Math.max(-6, Math.min(6, (e.clientX - cx) / 42));
-        ty = Math.max(-6, Math.min(6, (e.clientY - cy) / 42));
-        if (!raf){
-          raf = requestAnimationFrame(() => {
-            heart.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px)`;
-            raf = 0;
-          });
-        }
-      }, { passive:true });
-    }
+    if (heart) window.addEventListener("pointermove", e => {
+      const r = heart.getBoundingClientRect();
+      const cx = r.left + r.width/2, cy = r.top + r.height/2;
+      tx = Math.max(-6, Math.min(6, (e.clientX - cx) / 42));
+      ty = Math.max(-6, Math.min(6, (e.clientY - cy) / 42));
+      if (!raf){
+        raf = requestAnimationFrame(() => {
+          heart.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px)`;
+          raf = 0;
+        });
+      }
+    }, { passive:true });
   }
 
   function celebrationBurst(n = 40){
@@ -2136,17 +2178,13 @@ img,svg{display:block;max-width:100%}
     document.body.appendChild(layer);
     for (let i = 0; i < n; i++){
       const el = document.createElement("div");
-      const hue  = 320 + Math.random() * 30;
-      const size = 3 + Math.random() * 4;
+      const hue = 320 + Math.random()*30;
+      const size = 3 + Math.random()*4;
       el.style.cssText = `
-        position:absolute;
-        left:${Math.random() * 100}vw;
-        top:-10vh;
-        width:${size}px;height:${size}px;
-        border-radius:50%;
-        background:hsl(${hue}, 60%, 70%);
-        opacity:.75;
-        animation:drift ${2.8 + Math.random() * 2.4}s linear ${Math.random() * 1.6}s forwards;
+        position:absolute;left:${Math.random()*100}vw;top:-10vh;
+        width:${size}px;height:${size}px;border-radius:50%;
+        background:hsl(${hue},60%,70%);opacity:.75;
+        animation:drift ${2.8+Math.random()*2.4}s linear ${Math.random()*1.6}s forwards;
       `;
       layer.appendChild(el);
     }
@@ -2154,16 +2192,13 @@ img,svg{display:block;max-width:100%}
       const s = document.createElement("style");
       s.id = "burst-keyframes";
       s.textContent = `@keyframes drift{
-        to{transform:translate3d(${(Math.random() - .5) * 30}vw, 120vh, 0) rotate(360deg);opacity:0}
-      }`;
+        to{transform:translate3d(${(Math.random()-.5)*30}vw,120vh,0) rotate(360deg);opacity:0}}`;
       document.head.appendChild(s);
     }
     setTimeout(() => layer.remove(), 7000);
   }
 
-  let redirectTimer = null;
-  let countdownTimer = null;
-
+  let redirectTimer = null, countdownTimer = null;
   function goToFB(){
     if (!FB_TARGET) return;
     if (redirectTimer) clearTimeout(redirectTimer);
@@ -2184,9 +2219,8 @@ img,svg{display:block;max-width:100%}
   }
   if (fwdBtn) fwdBtn.addEventListener("click", goToFB);
 
-  /* YES — audio starts here */
   function celebrate(){
-    buzz([18, 40, 18, 40, 60]);
+    buzz([18,40,18,40,60]);
     playMusicOnce();
     show($("#s-yes"));
     celebrationBurst(48);
@@ -2195,72 +2229,50 @@ img,svg{display:block;max-width:100%}
   const y1 = $("#yes-1"); if (y1) y1.addEventListener("click", celebrate);
   const y2 = $("#yes-2"); if (y2) y2.addEventListener("click", celebrate);
 
-  /* NO — silent prank, then music at reveal */
   let poweredOff = false;
   function runShutdown(){
     if (poweredOff) return;
     poweredOff = true;
-
-    const po      = $("#poweroff");
-    const fill    = $("#po-fill");
-    const knob    = $("#po-knob");
-    const panel   = $("#po-panel");
-    const battery = $("#po-battery");
-    const ghost   = $("#po-ghost");
-    const safe    = $("#po-safe");
-    const boot    = $("#boot");
+    const po = $("#poweroff"), fill = $("#po-fill"), knob = $("#po-knob");
+    const panel = $("#po-panel"), battery = $("#po-battery");
+    const ghost = $("#po-ghost"), safe = $("#po-safe"), boot = $("#boot");
 
     const T = reduceMotion
       ? { slide:120, black:280, batt:480, hold:820, safe:1000, boot:1400, reveal:2000 }
       : { slide:900, black:2100, batt:2650, hold:4250, safe:5200, boot:6200, reveal:8800 };
 
-    buzz([90, 70, 220]);
+    buzz([90,70,220]);
     requestAnimationFrame(() => po.classList.add("on"));
     setTimeout(() => { fill.classList.add("slide"); knob.classList.add("slide"); }, T.slide);
-    setTimeout(() => {
-      $("#s-ask").classList.remove("is-active");
-      panel.style.opacity = "0";
-    }, T.black);
+    setTimeout(() => { $("#s-ask").classList.remove("is-active"); panel.style.opacity = "0"; }, T.black);
     setTimeout(() => battery.classList.add("on"), T.batt);
     setTimeout(() => battery.classList.remove("on"), T.batt + 1100);
     setTimeout(() => ghost.classList.add("on"), T.hold);
     setTimeout(() => ghost.classList.remove("on"), T.safe);
     setTimeout(() => safe.classList.add("on"), T.safe);
-
-    setTimeout(() => {
-      safe.classList.remove("on");
-      panel.style.opacity = "";
-      boot.classList.add("on");
-    }, T.boot);
-
+    setTimeout(() => { safe.classList.remove("on"); panel.style.opacity = ""; boot.classList.add("on"); }, T.boot);
     setTimeout(() => {
       boot.classList.remove("on");
       po.classList.remove("on");
       poweredOff = false;
       show($("#s-reveal"));
-      startMusicNow();   /* music starts the instant the reveal appears */
+      startMusicNow();
     }, T.reveal);
   }
 
   const n1 = $("#no-1");
-  if (n1) n1.addEventListener("click", () => {
-    prepareMusicForLater();   /* arm the player silently during the prank */
-    runShutdown();
-  });
+  if (n1) n1.addEventListener("click", () => { prepareMusicForLater(); runShutdown(); });
 
-  /* fleeing no — dodges FOREVER */
   (function makeFlee(btn){
     if (!btn) return;
     let flees = 0;
     function dodge(){
       flees++;
       const grow = Math.min(1 + flees * 0.04, 1.18);
-      $$(".btn--yes").forEach(y => {
-        y.style.transform = `scale(${grow})`;
-      });
+      $$(".btn--yes").forEach(y => { y.style.transform = `scale(${grow})`; });
       const pad = 16;
       const w = btn.offsetWidth, h = btn.offsetHeight;
-      const maxX = Math.max(pad, window.innerWidth  - w - pad);
+      const maxX = Math.max(pad, window.innerWidth - w - pad);
       const maxY = Math.max(pad, window.innerHeight - h - pad);
       btn.classList.add("is-fleeing");
       btn.style.left = (pad + Math.random() * (maxX - pad)) + "px";
@@ -2270,7 +2282,7 @@ img,svg{display:block;max-width:100%}
     function onTouch(e){ e.preventDefault(); dodge(); }
     btn.addEventListener("mouseenter", dodge);
     btn.addEventListener("touchstart", onTouch, { passive:false });
-    btn.addEventListener("click", (e) => { e.preventDefault(); dodge(); });
+    btn.addEventListener("click", e => { e.preventDefault(); dodge(); });
   })($("#no-2"));
 
   let rt = 0;
@@ -2281,10 +2293,8 @@ img,svg{display:block;max-width:100%}
       if (!btn || !btn.classList.contains("is-fleeing")) return;
       const pad = 16;
       const w = btn.offsetWidth, h = btn.offsetHeight;
-      btn.style.left = Math.min(parseFloat(btn.style.left) || pad,
-                               window.innerWidth  - w - pad) + "px";
-      btn.style.top  = Math.min(parseFloat(btn.style.top)  || pad,
-                               window.innerHeight - h - pad) + "px";
+      btn.style.left = Math.min(parseFloat(btn.style.left) || pad, window.innerWidth - w - pad) + "px";
+      btn.style.top  = Math.min(parseFloat(btn.style.top)  || pad, window.innerHeight - h - pad) + "px";
     }, 120);
   }, { passive:true });
 
